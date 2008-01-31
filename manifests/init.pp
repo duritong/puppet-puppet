@@ -6,7 +6,7 @@
 
 class puppet {
 
-    Package{'puppet':
+    package{'puppet':
         name => 'puppet',
         category => $operatingsystem ? {
             gentoo: 'app-admin',
@@ -15,7 +15,7 @@ class puppet {
         ensure => present,
     }
 
-    Package{'facter':
+    package{'facter':
         name => 'facter',
         category => $operatingsystem ? {
             gentoo: 'dev-ruby'
@@ -25,7 +25,7 @@ class puppet {
     }
 
 
-    Service{'puppet':
+    service{'puppet':
         enable => true,
         ensure => running,
         require => Package[puppet],
