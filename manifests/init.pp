@@ -9,7 +9,7 @@ class puppet {
     package{'puppet':
         name => 'puppet',
         category => $operatingsystem ? {
-            gentoo: 'app-admin',
+            gentoo => 'app-admin',
             default => '',
         },
         ensure => present,
@@ -18,7 +18,7 @@ class puppet {
     package{'facter':
         name => 'facter',
         category => $operatingsystem ? {
-            gentoo: 'dev-ruby'
+            gentoo => 'dev-ruby'
             default => '',
         },
         ensure => present,
