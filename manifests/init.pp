@@ -64,7 +64,7 @@ class puppet {
 }
 
 class puppetmaster inherits puppet {
-    Service{'puppetmaster':
+    service{'puppetmaster':
         enable => true,
         ensure => running,
         require => Package[puppet],
