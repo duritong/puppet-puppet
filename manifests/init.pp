@@ -81,7 +81,7 @@ define puppet::config($source = ''){
         owner => root,
         group => 0,
         mode => 600,
-        source => "puppet://$server/puppet/client/$real_source",
+        source => "puppet://$server/$real_source",
         notify => Service[puppet],
     }
 }
