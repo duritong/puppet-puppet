@@ -74,12 +74,12 @@ class puppetmaster inherits puppet {
 define puppet::config($source = ''){
 
     $real_source = $source ? {
-        '' => 'puppet/client/puppet.conf'
+        '' => 'puppet/client/puppet.conf',
         default => $source,
     }
 
     file { 'pupet_config':
-        path => '/etc/puppet/puppet.conf'
+        path => '/etc/puppet/puppet.conf',
         owner => root,
         group => 0,
         mode => 600,
