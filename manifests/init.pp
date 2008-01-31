@@ -110,7 +110,7 @@ define puppet::masterconfig(
         group => 0,
         mode => 600,
         source => $real_puppetsource,
-        notify => [Service[puppet],Service[puppetmaster],
+        notify => [Service[puppet],Service[puppetmaster] ],
     }
     file { 'fileserver_config':
         path => '/etc/puppet/fileserver.conf',
@@ -118,7 +118,7 @@ define puppet::masterconfig(
         group => 0,
         mode => 600,
         source => $real_fileserversource,
-        notify => [Service[puppet],Service[puppetmaster],
+        notify => [Service[puppet],Service[puppetmaster] ],
     }
 }
 
