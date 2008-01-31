@@ -83,7 +83,7 @@ define puppet::config($source = ''){
         owner => root,
         group => 0,
         mode => 600,
-        source => $real_source,
+        source => "puppet://$server/puppet/client/$real_source",
         notify => Service[puppet],
     }
 }
@@ -109,7 +109,7 @@ define puppet::masterconfig(
         owner => root,
         group => 0,
         mode => 600,
-        source => $real_puppetsource,
+        source => "puppet://$server/puppet/master/$real_puppetsource",
         notify => [Service[puppet],Service[puppetmaster] ],
     }
     file { 'fileserver_config':
@@ -117,7 +117,7 @@ define puppet::masterconfig(
         owner => root,
         group => 0,
         mode => 600,
-        source => $real_fileserversource,
+        source => "puppet://$server/puppet/master/$real_fileserversource",
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 }
