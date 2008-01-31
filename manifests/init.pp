@@ -71,7 +71,7 @@ class puppetmaster inherits puppet {
     }
 }
 
-puppet::config($source = ''){
+define puppet::config($source = ''){
 
     $real_source = $source ? {
         '' => 'puppet/client/puppet.conf'
@@ -88,7 +88,7 @@ puppet::config($source = ''){
     }
 }
 
-puppet::masterconfig(
+define puppet::masterconfig(
     $puppetsource = '',
     $fileserversource = ''
 ){
