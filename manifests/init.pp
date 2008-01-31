@@ -18,7 +18,7 @@ class puppet {
     package{'facter':
         name => 'facter',
         category => $operatingsystem ? {
-            gentoo => 'dev-ruby'
+            gentoo => 'dev-ruby',
             default => '',
         },
         ensure => present,
