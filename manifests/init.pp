@@ -95,17 +95,17 @@ define puppet::masterconfig(
 
 
     $real_puppetsource = $puppetsource ? {
-        '' => 'puppet/master/puppet.conf'
+        '' => 'puppet/master/puppet.conf',
         default => $source,
     }
 
     $real_fileserversource = $fileserversource ? {
-        '' => 'puppet/master/fileserver.conf'
+        '' => 'puppet/master/fileserver.conf',
         default => $source,
     }
 
     file { 'pupet_config':
-        path => '/etc/puppet/puppet.conf'
+        path => '/etc/puppet/puppet.conf',
         owner => root,
         group => 0,
         mode => 600,
@@ -113,7 +113,7 @@ define puppet::masterconfig(
         notify => [Service[puppet],Service[puppetmaster],
     }
     file { 'fileserver_config':
-        path => '/etc/puppet/fileserver.conf'
+        path => '/etc/puppet/fileserver.conf',
         owner => root,
         group => 0,
         mode => 600,
