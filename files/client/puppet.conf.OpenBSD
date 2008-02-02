@@ -1,0 +1,36 @@
+[main]
+    logdir=/var/log/puppet
+    vardir=/var/lib/puppet
+    rundir=/var/run/puppet
+    
+    #ssldir=/var/lib/puppet/ssl
+    ssldir=$vardir/ssl
+    
+    # Where 3rd party plugins and modules are installed
+    libdir = $vardir/lib
+    
+    templatedir=$vardir/templates
+
+    # Turn plug-in synchronization on.
+    pluginsync = true
+    pluginsource = puppet://$server/plugins
+    factpath = $vardir/lib/facter
+
+[puppetd]
+     # The file in which puppetd stores a list of the classes
+     # associated with the retrieved configuratiion.  Can be loaded in
+     # the separate ``puppet`` executable using the ``--loadclasses``
+     # option.
+     # The default value is '$confdir/classes.txt'.
+     classfile = $vardir/classes.txt
+ 
+     # Where puppetd caches the local configuration.  An
+     # extension indicating the cache format is added automatically.
+     # The default value is '$confdir/localconfig'.
+     localconfig = $vardir/localconfig
+ 
+     user=_puppet
+
+    report=true
+    server=puppet.glei.ch
+

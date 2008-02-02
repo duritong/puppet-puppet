@@ -5,7 +5,13 @@
 # modules_dir { "puppet": }
 
 class puppet {
+    case $kernel {
+        linux: { include puppet::linux}
+        openbsd: { include puppet::openbsd}
+    }
+}
 
+class puppet::linux {
     package{'puppet':
         name => 'puppet',
         category => $operatingsystem ? {
@@ -24,10 +30,16 @@ class puppet {
         ensure => present,
     }
 
-
     service{'puppet':
         ensure => running,
         require => Package[puppet],
+    }
+}
+class puppet::openbsd {
+    service{'puppet':
+        provider => base,
+        pattern => puppetd,
+        ensure => running,
     }
 }
 
@@ -41,8 +53,9 @@ class puppetmaster inherits puppet {
 define puppet::config($source = ''){
 
     $real_source = $source ? {
-        '' => 'puppet/client/puppet.conf',
-        default => $source,
+        '' => [ "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
+                "puppet://$server/puppet/client/puppet.conf" ],
+        default => "puppet://$server/$source",
     }
 
     file { 'pupet_config':
@@ -50,7 +63,7 @@ define puppet::config($source = ''){
         owner => root,
         group => 0,
         mode => 600,
-        source => "puppet://$server/$real_source",
+        source => $real_source,
         notify => Service[puppet],
     }
 }
