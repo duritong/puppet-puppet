@@ -29,37 +29,6 @@ class puppet {
         ensure => running,
         require => Package[puppet],
     }
-            
-    file {"$rubysitedir/puppet/parser/functions/":
-        ensure => directory,
-        owner => root,
-        group => 0,
-        mode => 744,
-    }
-
-    file { 'slash_escape_function':
-        path => "$rubysitedir/puppet/parser/functions/slash_escape.rb",
-        ensure => file,
-        owner => 'root',
-        group => 0,
-        mode => 644,
-        source => "puppet://$server/puppet/improvements/functions/slash_escape.rb",
-   }
-
-    file { 'puppet_patch_script':
-        path => "/root/puppet_install.sh",
-        ensure => absent,
-    }
-
-    file { 'puppet_patch':
-        path => "/root/puppet_0.23.2-13.diff",
-        ensure => absent,
-    }
-
-    file { 'puppet_patch2':
-        path => "/root/puppet_module_plugin_dirs.patch",
-        ensure => absent,
-    }
 }
 
 class puppetmaster inherits puppet {
