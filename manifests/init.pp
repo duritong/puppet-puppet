@@ -81,7 +81,18 @@ class puppetmaster inherits puppet {
     $real_puppetmaster_conf_source = $puppet_conf_source ? {
         '' => [ "puppet://$server/dist/puppet/master/puppet.conf",
                 "puppet://$server/puppet/master/puppet.conf" ],
-        default => "puppet://$server/$source",
+        default => "puppet://$server/$puppet_conf_source",
+    }
+    $real_puppet_fileserver_source = $puppet_fileserver_source ? {
+        '' => [ "puppet://$server/dist/puppet/master/fileserver.conf",
+                "puppet://$server/puppet/master/fileserver.conf" ],
+        default => "puppet://$server/$puppet_fileserver_source"
+    }
+
+
+    File[puppet_config]{
+        source => $real_puppetmaster_conf_source,
+        notify => [Service[puppet],Service[puppetmaster] ],
     }
 
     $real_puppet_fileserver_source = $puppet_fileserver_source ? {
@@ -90,17 +101,11 @@ class puppetmaster inherits puppet {
         default => "puppet://$server/$puppet_fileserver_source"
     }
 
-    File[puppet_config]{
-        source => $real_puppetmaster_conf_source,
-        notify => [Service[puppet],Service[puppetmaster] ],
-    }
-
-    file { 'fileserver_config':
-        path => '/etc/puppet/fileserver.conf',
+    file { '/etc/puppet/fileserver.conf':
         owner => root,
         group => 0,
         mode => 600,
-        source => $real_puppet_fileserver_source,
+        source => $real_puppet_fileserver_source ,
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 }
