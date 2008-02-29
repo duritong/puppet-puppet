@@ -51,11 +51,6 @@ class puppet::linux {
     service{'puppet':
         ensure => running,
         require => Package[puppet],
-        hasstatus => $operatingsystem ? {
-            gentoo => false,
-            default => true,
-        },
-        hasrestart => true,
     }
 
     file{'/etc/cron.d/puppetd':
