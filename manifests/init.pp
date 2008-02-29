@@ -57,8 +57,9 @@ class puppet::linux {
         owner => root,
         group => 0,
         mode => 0644,
-        source => [ "puppet://$server/puppet/conf.d/puppetd.$operatingsystem",
-                    "puppet://$server/puppet/conf.d/puppetd"
+        source => [ "puppet://$server/dist/puppet/cron.d/puppetd",
+                    "puppet://$server/puppet/cron.d/puppetd.$operatingsystem",
+                    "puppet://$server/puppet/cron.d/puppetd"
         ],
     }
 }
