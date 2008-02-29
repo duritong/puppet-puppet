@@ -55,6 +55,14 @@ class puppet::linux {
         hasrestart => true,
     }
 
+    case $operatingsystem {
+        gentoo: {
+            Service[puppet]{
+                hasstatus => false
+            }
+        }
+    }
+
     file{'/etc/cron.d/puppetd':
         owner => root,
         group => 0,
