@@ -86,7 +86,7 @@ class puppetmaster inherits puppet {
 
     $real_puppet_fileserver_source = $puppet_fileserver_source ? {
         '' => [ "puppet://$server/dist/puppet/master/fileserver.conf",
-                "puppet://$server//puppet/master/fileserver.conf" ],
+                "puppet://$server/puppet/master/fileserver.conf" ],
         default => "puppet://$server/$puppet_fileserver_source"
     }
 
