@@ -9,6 +9,24 @@ class puppet {
         linux: { include puppet::linux}
         openbsd: { include puppet::openbsd}
     }
+
+    $real_puppet_conf_source = $puppet_conf_source ? {
+        '' => [ "puppet://$server/dist/puppet/client/puppet.conf.$operatingsystem",
+                "puppet://$server/dist/puppet/client/puppet.conf", 
+                "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
+                "puppet://$server/puppet/client/puppet.conf" ],
+        default => "puppet://$server/$source",
+    }
+
+    file { 'pupet_config':
+        path => '/etc/puppet/puppet.conf',
+        owner => root,
+        group => 0,
+        mode => 600,
+        source => $real_puppet_conf_source,
+        notify => Service[puppet],
+    }
+
 }
 
 class puppet::linux {
@@ -59,6 +77,39 @@ class puppetmaster inherits puppet {
         ensure => running,
         require => Package[puppet],
     }
+
+    $real_puppetmaster_conf_source = $puppet_conf_source ? {
+        '' => [ "puppet://$server/dist/puppet/master/puppet.conf",
+                "puppet://$server/puppet/master/puppet.conf" ],
+        default => "puppet://$server/$source",
+    }
+
+    $real_puppet_fileserver_source = $puppet_fileserver_source ? {
+        '' => [ "puppet://$server/dist/puppet/master/fileserver.conf",
+                "puppet://$server//puppet/master/fileserver.conf" ],
+        default => "puppet://$server/$puppet_fileserver_source"
+    }
+
+    File[pupet_config]{
+        source => $real_puppetmaster_conf_source,
+        notify => [Service[puppet],Service[puppetmaster] ],
+    }
+
+    file { 'pupet_config':
+        path => '/etc/puppet/puppet.conf',
+        owner => root,
+        group => 0,
+        mode => 600,
+        source => $real_puppetsource,
+    }
+    file { 'fileserver_config':
+        path => '/etc/puppet/fileserver.conf',
+        owner => root,
+        group => 0,
+        mode => 600,
+        source => $real_puppet_fileserver_source,
+        notify => [Service[puppet],Service[puppetmaster] ],
+    }
 }
 
 define puppet::config($source = ''){
@@ -78,39 +129,3 @@ define puppet::config($source = ''){
         notify => Service[puppet],
     }
 }
-
-define puppet::masterconfig(
-    $puppetsource = '',
-    $fileserversource = ''
-){
-
-
-    $real_puppetsource = $puppetsource ? {
-        '' => 'puppet/master/puppet.conf',
-        default => $source,
-    }
-
-    $real_fileserversource = $fileserversource ? {
-        '' => 'puppet/master/fileserver.conf',
-        default => $source,
-    }
-
-    file { 'pupet_config':
-        path => '/etc/puppet/puppet.conf',
-        owner => root,
-        group => 0,
-        mode => 600,
-        source => "puppet://$server/$real_puppetsource",
-        notify => [Service[puppet],Service[puppetmaster] ],
-    }
-    file { 'fileserver_config':
-        path => '/etc/puppet/fileserver.conf',
-        owner => root,
-        group => 0,
-        mode => 600,
-        source => "puppet://$server/$real_fileserversource",
-        notify => [Service[puppet],Service[puppetmaster] ],
-    }
-}
-
-
