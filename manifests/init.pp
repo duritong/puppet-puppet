@@ -33,6 +33,8 @@ class puppet::linux {
     service{'puppet':
         ensure => running,
         require => Package[puppet],
+        hasstatus => true,
+        hasrestart => true,
     }
 }
 class puppet::openbsd {
