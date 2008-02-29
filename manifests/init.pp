@@ -18,7 +18,7 @@ class puppet {
         default => "puppet://$server/$source",
     }
 
-    file { 'pupet_config':
+    file { 'puppet_config':
         path => '/etc/puppet/puppet.conf',
         owner => root,
         group => 0,
@@ -90,18 +90,11 @@ class puppetmaster inherits puppet {
         default => "puppet://$server/$puppet_fileserver_source"
     }
 
-    File[pupet_config]{
+    File[puppet_config]{
         source => $real_puppetmaster_conf_source,
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 
-    file { 'pupet_config':
-        path => '/etc/puppet/puppet.conf',
-        owner => root,
-        group => 0,
-        mode => 600,
-        source => $real_puppetsource,
-    }
     file { 'fileserver_config':
         path => '/etc/puppet/fileserver.conf',
         owner => root,
@@ -109,23 +102,5 @@ class puppetmaster inherits puppet {
         mode => 600,
         source => $real_puppet_fileserver_source,
         notify => [Service[puppet],Service[puppetmaster] ],
-    }
-}
-
-define puppet::config($source = ''){
-
-    $real_source = $source ? {
-        '' => [ "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
-                "puppet://$server/puppet/client/puppet.conf" ],
-        default => "puppet://$server/$source",
-    }
-
-    file { 'pupet_config':
-        path => '/etc/puppet/puppet.conf',
-        owner => root,
-        group => 0,
-        mode => 600,
-        source => $real_source,
-        notify => Service[puppet],
     }
 }
