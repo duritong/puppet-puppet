@@ -36,6 +36,15 @@ class puppet::linux {
         hasstatus => true,
         hasrestart => true,
     }
+
+    file{'/etc/cron.d/puppetd':
+        owner => root,
+        group => 0,
+        mode => 0644,
+        source => [ "puppet://$server/puppet/conf.d/puppetd.$operatingsystem",
+                    "puppet://$server/puppet/conf.d/puppetd"
+        ],
+    }
 }
 class puppet::openbsd {
     service{'puppet':
