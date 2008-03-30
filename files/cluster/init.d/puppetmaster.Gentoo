@@ -8,7 +8,7 @@ depend() {
 	use dns logger
 }
 
-PORTS=[ 18140 18141 18142 18143]
+PORTS=( 18140 18141 18142 18143 )
 
 checkconfig() {
 	if [[ ! -d "${PUPPETMASTER_PID_DIR}" ]] ; then
@@ -34,24 +34,24 @@ start() {
 	[[ -n "${PUPPETMASTER_MANIFEST}" ]]   && options="${options} --manifest=${PUPPETMASTER_MANIFEST}"
 	[[ -n "${PUPPETMASTER_LOG}" ]]        && options="${options} --logdest=${PUPPETMASTER_LOG}"
 	[[ -n "${PUPPETMASTER_EXTRA_OPTS}" ]] && options="${options} ${PUPPETMASTER_EXTRA_OPTS}"
-
-    for port in $PORTS; do 
-	    ebegin "Starting puppetmaster on port ${port}"
-    	start-stop-daemon --start --quiet --exec /usr/bin/puppetmasterd \
-    		--pidfile=${PUPPETMASTER_PID_DIR}/puppetmasterd.${port}.pid \
-            --servertype=mongrel \
-            --masterport="${port}" \
-            -- ${options} 
+	for ((i=0; i<${#PORTS[@]}; i++)); do
+	    ebegin "Starting puppetmaster on port ${PORTS[$i]}"
+    	    start-stop-daemon --start --quiet --exec /usr/bin/puppetmasterd \
+    		--pidfile=${PUPPETMASTER_PID_DIR}/puppetmasterd.${PORTS[$i]}.pid \
+            	-- ${options} \
+    		--pidfile=${PUPPETMASTER_PID_DIR}/puppetmasterd.${PORTS[$i]}.pid \
+            	--servertype=mongrel \
+            	--masterport="${PORTS[$i]}" 
             a=$? || $a
-    done
+	done
 	eend $a "Failed to start puppetmaster"
 }
 
 stop() {
-    for port in $PORTS; do
-    	ebegin "Stopping puppetmaster on port ${port}"
+    for ((i=0; i<${#PORTS[@]}; i++)); do
+    	ebegin "Stopping puppetmaster on port ${PORTS[$i]}"
 	    start-stop-daemon --stop --quiet \
-		    --pidfile ${PUPPETMASTER_PID_DIR}/puppetmasterd.${port}.pid
+		    --pidfile ${PUPPETMASTER_PID_DIR}/puppetmasterd.${PORTS[$i]}.pid
     	local ret=$? || $ret
     done
 	eend ${ret} "Failed to stop puppetmaster"
