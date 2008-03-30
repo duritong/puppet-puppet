@@ -102,3 +102,22 @@ class puppetmaster inherits puppet {
         notify => [Service[puppet],Service[puppetmaster] ],
     }
 }
+
+class puppetmaster::cluster inherits puppetmaster {
+    include mongrel, nginx
+
+    File[puppet_config] {
+        require => [ Package[mongrel], Package[nginx], File[nginx_config] ],
+    }
+
+    file{"/etc/init.d/puppetmaster":
+        source => [ "puppet://$server/dist/puppet/cluster/init.d/puppetmaster-${fqdn}",
+                    "puppet://$server/puppet/cluster/init.d/puppetmaster.${operatingsystem}",
+                    "puppet://$server/puppet/cluster/init.d/puppetmaster" ],
+        owner => root,
+        group => 0,
+        mode => 0755,
+        require => [ Package[puppet], Package[mongrel], Package[nginx], File[nginx_config] ], 
+        notify => Service[puppetmaster],
+    }
+}

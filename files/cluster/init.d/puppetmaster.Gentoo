@@ -1,0 +1,60 @@
+#!/sbin/runscript
+# Copyright 1999-2008 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+
+depend() {
+	need net
+	before puppet
+	use dns logger
+}
+
+PORTS=[ 18140 18141 18142 18143]
+
+checkconfig() {
+	if [[ ! -d "${PUPPETMASTER_PID_DIR}" ]] ; then
+		eerror "Please make sure PUPPETMASTER_PID_DIR is defined and points to a existing directory"
+		return 1
+	fi
+
+	local site_manifest="/etc/puppet/manifests/site.pp"
+	[[ -n "${PUPPETMASTER_MANIFEST}" ]] && site_manifest="${PUPPETMASTER_MANIFEST}"
+
+	if [ ! -f "${site_manifest}" ] ; then
+		eerror "Please create ${site_manifest} before running puppet"
+		return 1
+	fi
+
+	return 0
+}
+
+start() {
+	checkconfig || return $?
+
+	local options=""
+	[[ -n "${PUPPETMASTER_MANIFEST}" ]]   && options="${options} --manifest=${PUPPETMASTER_MANIFEST}"
+	[[ -n "${PUPPETMASTER_LOG}" ]]        && options="${options} --logdest=${PUPPETMASTER_LOG}"
+	[[ -n "${PUPPETMASTER_EXTRA_OPTS}" ]] && options="${options} ${PUPPETMASTER_EXTRA_OPTS}"
+
+    for port in $PORTS; do 
+	    ebegin "Starting puppetmaster on port ${port}"
+    	start-stop-daemon --start --quiet --exec /usr/bin/puppetmasterd \
+    		--pidfile=${PUPPETMASTER_PID_DIR}/puppetmasterd.${port}.pid \
+            --servertype=mongrel \
+            --masterport="${port}" \
+            -- ${options} 
+            a=$? || $a
+    done
+	eend $a "Failed to start puppetmaster"
+}
+
+stop() {
+    for port in $PORTS; do
+    	ebegin "Stopping puppetmaster on port ${port}"
+	    start-stop-daemon --stop --quiet \
+		    --pidfile ${PUPPETMASTER_PID_DIR}/puppetmasterd.${port}.pid
+    	local ret=$? || $ret
+    done
+	eend ${ret} "Failed to stop puppetmaster"
+	rm -f ${PUPPETMASTER_PID_DIR}/puppetmasterd.pid
+	return ${ret}
+}
