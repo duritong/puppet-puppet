@@ -11,8 +11,8 @@ class puppet {
     }
 
     $real_puppet_conf_source = $puppet_conf_source ? {
-        '' => [ "puppet://$server/dist/puppet/client/puppet.conf.$operatingsystem",
-                "puppet://$server/dist/puppet/client/puppet.conf", 
+        '' => [ "puppet://$server/files/puppet/client/puppet.conf.$operatingsystem",
+                "puppet://$server/files/puppet/client/puppet.conf", 
                 "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
                 "puppet://$server/puppet/client/puppet.conf" ],
         default => "puppet://$server/$source",
@@ -57,7 +57,7 @@ class puppet::linux {
         owner => root,
         group => 0,
         mode => 0644,
-        source => [ "puppet://$server/dist/puppet/cron.d/puppetd",
+        source => [ "puppet://$server/files/puppet/cron.d/puppetd",
                     "puppet://$server/puppet/cron.d/puppetd.$operatingsystem",
                     "puppet://$server/puppet/cron.d/puppetd"
         ],
@@ -78,7 +78,7 @@ class puppetmaster inherits puppet {
     }
 
     $real_puppetmaster_conf_source = $puppet_conf_source ? {
-        '' => [ "puppet://$server/dist/puppet/master/puppet.conf",
+        '' => [ "puppet://$server/files/puppet/master/puppet.conf",
                 "puppet://$server/puppet/master/puppet.conf" ],
         default => "puppet://$server/$puppet_conf_source",
     }
@@ -89,7 +89,7 @@ class puppetmaster inherits puppet {
     }
 
     $real_puppet_fileserver_source = $puppet_fileserver_source ? {
-        '' => [ "puppet://$server/dist/puppet/master/fileserver.conf",
+        '' => [ "puppet://$server/files/puppet/master/fileserver.conf",
                 "puppet://$server/puppet/master/fileserver.conf" ],
         default => "puppet://$server/$puppet_fileserver_source"
     }
@@ -111,7 +111,7 @@ class puppetmaster::cluster inherits puppetmaster {
     }
 
     file{"/etc/init.d/puppetmaster":
-        source => [ "puppet://$server/dist/puppet/cluster/init.d/puppetmaster-${fqdn}",
+        source => [ "puppet://$server/files/puppet/cluster/init.d/puppetmaster-${fqdn}",
                     "puppet://$server/puppet/cluster/init.d/puppetmaster.${operatingsystem}",
                     "puppet://$server/puppet/cluster/init.d/puppetmaster" ],
         owner => root,
