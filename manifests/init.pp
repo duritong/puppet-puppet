@@ -19,7 +19,7 @@ class puppet {
     }
 
     file { 'puppet_config':
-        path => '/etc/puppet/puppet.conf',
+        path => "$config",
         owner => root,
         group => 0,
         mode => 600,
@@ -105,7 +105,7 @@ class puppetmaster::linux inherits puppet::linux {
         default => "puppet://$server/$puppet_fileserver_source"
     }
 
-    file { '/etc/puppet/fileserver.conf':
+    file { "$fileserverconfig":
         owner => root,
         group => 0,
         mode => 600,
