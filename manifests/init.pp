@@ -72,6 +72,12 @@ class puppet::openbsd {
 }
 
 class puppetmaster inherits puppet {
+    case $operatingsystem {
+        linux: { include puppetmaster::linux }
+    }
+}
+
+puppetmaster::linux inherits puppet::linux
     service{'puppetmaster':
         ensure => running,
         require => Package[puppet],
