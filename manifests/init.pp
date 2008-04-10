@@ -19,7 +19,7 @@ class puppet {
     }
     
     $real_puppet_config = $puppet_config ? {
-        '' => "/etc/puppet/puppet.conf",
+        '' => "/etc/puppet/puppet.confa",
         default => $puppet_config,
     }
 
