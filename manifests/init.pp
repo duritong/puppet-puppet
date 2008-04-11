@@ -76,19 +76,6 @@ class puppetmaster inherits puppet {
     case $operatingsystem {
         linux: { include puppetmaster::linux }
     }
-}
-
-class puppetmaster::linux inherits puppet::linux {
-    service{'puppetmaster':
-        ensure => running,
-        require => Package[puppet],
-    }
-
-    
-    Service[puppet]{
-        require +> Service[puppetmaster], 
-    }
-
     File[puppet_config]{
         source => [ "puppet://$server/files/puppet/master/puppet.conf",
                     "puppet://$server/puppet/master/puppet.conf" ],
@@ -108,6 +95,19 @@ class puppetmaster::linux inherits puppet::linux {
                     "puppet://$server/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
     }
+}
+
+class puppetmaster::linux inherits puppet::linux {
+    service{'puppetmaster':
+        ensure => running,
+        require => Package[puppet],
+    }
+
+    
+    Service[puppet]{
+        require +> Service[puppetmaster], 
+    }
+
 }
 
 class puppetmaster::cluster inherits puppetmaster {
