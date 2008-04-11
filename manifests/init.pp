@@ -73,7 +73,7 @@ class puppet::openbsd {
 }
 
 class puppetmaster inherits puppet {
-    case $operatingsystem {
+    case $kernel {
         linux: { include puppetmaster::linux }
     }
     File[puppet_config]{
