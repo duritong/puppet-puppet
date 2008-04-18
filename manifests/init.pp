@@ -51,6 +51,8 @@ class puppet::linux {
 
     service{'puppet':
         ensure => running,
+        enabled => true,
+        hasstatus => true,
         require => Package[puppet],
     }
 
