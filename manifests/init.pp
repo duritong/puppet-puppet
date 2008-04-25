@@ -6,7 +6,11 @@
 
 class puppet {
     case $kernel {
-        linux: { include puppet::linux}
+        linux: { case $operatingsystem {
+                    gentoo:  { include puppet::gentoo }
+                    default: { include puppet::linux}
+                 }
+        }
         openbsd: { include puppet::openbsd}
     }
 
@@ -32,27 +36,17 @@ class puppet {
 
 class puppet::linux {
     package{'puppet':
-        name => 'puppet',
-        category => $operatingsystem ? {
-            gentoo => 'app-admin',
-            default => '',
-        },
         ensure => present,
     }
 
     package{'facter':
-        name => 'facter',
-        category => $operatingsystem ? {
-            gentoo => 'dev-ruby',
-            default => '',
-        },
         ensure => present,
     }
 
     service{'puppet':
         ensure => running,
         enable => true,
-        #hasstatus => true,
+        hasstatus => true,
         require => Package[puppet],
     }
 
@@ -64,6 +58,18 @@ class puppet::linux {
                     "puppet://$server/puppet/cron.d/puppetd.$operatingsystem",
                     "puppet://$server/puppet/cron.d/puppetd"
         ],
+    }
+}
+class puppet::gentoo inherits puppet::linux {
+    Package[puppet]{
+        category => 'app-admin',
+    }
+    Package[facter]{
+        category => 'dev-ruby',
+    }
+    # as we use sometimes the init script to test
+    Service[puppet]{
+        hasstatus => false,
     }
 }
 class puppet::openbsd {
