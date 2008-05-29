@@ -1,6 +1,10 @@
-# modules/puppet/manifests/init.pp - manage puppet stuff
-# Copyright (C) 2007 admin@immerda.ch
-#
+# puppet module
+# original by luke kanies
+# http://github.com/lak
+# adaapted by puzzel itc
+# merged with immerda project group's
+# solution
+#######################################
 
 # modules_dir { "puppet": }
 
@@ -21,17 +25,14 @@ class puppet {
 
     file { 'puppet_config':
         path => "$real_puppet_config",
-        owner => root,
-        group => 0,
-        mode => 600,
         source => [ "puppet://$server/files/puppet/client/${fqdn}/puppet.conf",
                 "puppet://$server/files/puppet/client/puppet.conf.$operatingsystem",
                 "puppet://$server/files/puppet/client/puppet.conf",
                 "puppet://$server/puppet/client/puppet.conf.$operatingsystem",
                 "puppet://$server/puppet/client/puppet.conf" ],
         notify => Service[puppet],
+        owner => root, group => 0, mode => 600;
     }
-
 }
 
 class puppet::linux {
@@ -50,14 +51,10 @@ class puppet::linux {
         require => Package[puppet],
     }
 
-    file{'/etc/cron.d/puppetd':
-        owner => root,
-        group => 0,
-        mode => 0644,
-        source => [ "puppet://$server/files/puppet/cron.d/puppetd",
-                    "puppet://$server/puppet/cron.d/puppetd.$operatingsystem",
-                    "puppet://$server/puppet/cron.d/puppetd"
-        ],
+    file{'/etc/cron.d/puppetd.cron':
+        source => [ "puppet://$server/puppet/cron.d/puppetd.${operatingsystem}",
+                    "puppet://$server/puppet/cron.d/puppetd" ],
+        owner => root, group => 0, mode => 0644;
     }
 }
 class puppet::gentoo inherits puppet::linux {
@@ -77,66 +74,5 @@ class puppet::openbsd {
         provider => base,
         pattern => puppetd,
         ensure => running,
-    }
-}
-
-class puppetmaster inherits puppet {
-    case $kernel {
-        linux: { include puppetmaster::linux }
-    }
-    File[puppet_config]{
-        source => [ "puppet://$server/files/puppet/master/puppet.conf",
-                    "puppet://$server/puppet/master/puppet.conf" ],
-        notify => [Service[puppet],Service[puppetmaster] ],
-    }
-
-    $real_puppet_fileserverconfig = $puppet_fileserverconfig ? {
-        '' => "/etc/puppet/fileserver.conf",
-        default => $puppet_fileserverconfig,
-    }
-
-    file { "$real_puppet_fileserverconfig":
-        owner => root,
-        group => 0,
-        mode => 600,
-        source => [ "puppet://$server/files/puppet/master/fileserver.conf",
-                    "puppet://$server/puppet/master/fileserver.conf" ],
-        notify => [Service[puppet],Service[puppetmaster] ],
-    }
-}
-
-class puppetmaster::linux inherits puppet::linux {
-    service{'puppetmaster':
-        ensure => running,
-        require => Package[puppet],
-    }
-
-    
-    Service[puppet]{
-        require +> Service[puppetmaster], 
-    }
-
-}
-
-class puppetmaster::cluster inherits puppetmaster {
-    include mongrel, nginx
-
-    Service[puppetmaster]{
-        require +> Service[ngnix],
-    }
-
-    File[puppet_config] {
-        require => [ Package[mongrel], Package[nginx], File[nginx_config] ],
-    }
-
-    file{"/etc/init.d/puppetmaster":
-        source => [ "puppet://$server/files/puppet/cluster/init.d/puppetmaster-${fqdn}",
-                    "puppet://$server/puppet/cluster/init.d/puppetmaster.${operatingsystem}",
-                    "puppet://$server/puppet/cluster/init.d/puppetmaster" ],
-        owner => root,
-        group => 0,
-        mode => 0755,
-        require => [ Package[puppet], Package[mongrel], Package[nginx], File[nginx_config] ], 
-        notify => Service[puppetmaster],
     }
 }

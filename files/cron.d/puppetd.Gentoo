@@ -1,0 +1,1 @@
+#0 * * * *   root    /bin/ps ax | /bin/grep -v grep | /bin/grep puppetd > /dev/null || /etc/init.d/puppet restart
