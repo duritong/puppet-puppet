@@ -1,10 +1,8 @@
+#
 # puppet module
 # modules/puppet/manifests/init.pp - manage puppet stuff
 # original by luke kanies
 # http://github.com/lak
-# adapted by puzzel itc
-# merged with immerda project group's
-# solution
 #
 # Copyright 2008, admin(at)immerda.ch
 # Copyright 2008, Puzzle ITC GmbH
@@ -59,6 +57,7 @@ class puppet::linux {
         ensure => running,
         enable => true,
         hasstatus => true,
+        pattern => puppetd,
         require => Package[puppet],
     }
 
