@@ -8,7 +8,7 @@ class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
     }
 
     File[puppet_config] {
-        require => [ Package[mongrel], Package[nginx], File[nginx_config] ],
+        require +> [ Package[mongrel], Package[nginx], File[nginx_config] ],
     }
 
     case $operatingsystem {
