@@ -3,16 +3,6 @@
 class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
     include mongrel, nginx
 
-    case $operatingsystem {
-        centos,debian, redhat: { include puppet::puppetmaster::package::cluster }
-        default: {
-            case $kernel {
-                linux: { include puppet::puppetmaster::linux::cluster }
-            }
-        }
-    }
-
-
     File[puppet_config] {
         require +> [ Package[mongrel], Package[nginx], File[nginx_config] ],
     }
@@ -24,16 +14,5 @@ class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
                 owner => root, group => 0, mode => 0755;
             }
         }
-    }
-}
-
-class puppet::puppetmaster::linux::cluster inherits puppet::puppetmaster::linux {
-    Service[puppetmaster]{
-        require +> Class[nginx],
-    }
-}
-class puppet::puppetmaster::package::cluster inherits puppet::puppetmaster::package {
-    Service[puppetmaster]{
-        require +> Class[ngnix],
     }
 }
