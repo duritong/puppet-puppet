@@ -29,11 +29,11 @@ class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
 
 class puppet::puppetmaster::linux::cluster inherits puppet::puppetmaster::linux {
     Service[puppetmaster]{
-        require +> Service[ngnix],
+        require +> Class[nginx],
     }
 }
 class puppet::puppetmaster::package::cluster inherits puppet::puppetmaster::package {
     Service[puppetmaster]{
-        require +> Service[ngnix],
+        require +> Class[ngnix],
     }
 }
