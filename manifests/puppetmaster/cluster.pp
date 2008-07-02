@@ -3,8 +3,8 @@
 class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
     include mongrel, nginx
 
-    Service[puppetmaster]{
-        require +> Service[ngnix],
+    case $kernel {
+        linux: { include puppet::puppetmaster::linux::cluster }
     }
 
     File[puppet_config] {
@@ -21,3 +21,8 @@ class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
     }
 }
 
+class puppet::puppetmaster::linux::cluster inherits puppet::puppetmaster::linux {
+    Service[puppetmaster]{
+        require +> Service[ngnix],
+    }
+}
