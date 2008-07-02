@@ -111,22 +111,22 @@ define puppet::puppetmaster::hasdb::mysql(
     $dbhostfqdn = "${fqdn}",
     $dbuser = 'puppet',
     $dbpwd,
-    $dbconnectinghost = 'locahost'
+    $dbconnectinghost = 'localhost'
 ){
     @@mysql_database{$dbname: 
         tag => "mysql_${dbhostfqdn}",
     }
 
-    @@mysql_user{"${dbuser}@$${dbconnectinghost}":
+    @@mysql_user{"${dbuser}@${dbconnectinghost}":
         password_hash => mysql_password("$dbpwd"),
         require => Mysql_database[$dbname],    
         tag => "mysql_${dbhostfqdn}",
     }
 
 
-    @@mysql_grant{"${dbuser}@$${dbconnectinghost}/${dbname}":
+    @@mysql_grant{"${dbuser}@${dbconnectinghost}/${dbname}":
         privileges => all,
-        require => Mysql_user["${dbuser}@{dbconnectinghost}"],
+        require => Mysql_user["${dbuser}@${dbconnectinghost}"],
         tag => "mysql_${dbhostfqdn}",
     }
 }
