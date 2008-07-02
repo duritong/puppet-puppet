@@ -10,7 +10,7 @@ class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
     case $operatingsystem {
         gentoo, centos: {
             file{"/etc/init.d/puppetmaster":
-                source => "puppet://$server/puppet/init.d/puppetmaster.${operatingsystem}",
+                source => "puppet://$server/puppet/cluster/init.d/puppetmaster.${operatingsystem}",
                 owner => root, group => 0, mode => 0755;
             }
         }
