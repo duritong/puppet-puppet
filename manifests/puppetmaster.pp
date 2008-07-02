@@ -24,7 +24,8 @@ class puppet::puppetmaster inherits puppet {
     }
 
     file { "$real_puppet_fileserverconfig":
-        source => [ "puppet://$server/files/puppet/master/fileserver.conf",
+        source => [ "puppet://$server/files/puppet/master/${fqdn}/fileserver.conf",
+                    "puppet://$server/files/puppet/master/fileserver.conf",
                     "puppet://$server/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
         owner => root, group => 0, mode => 600;
@@ -60,27 +61,6 @@ class puppet::puppetmaster::package inherits puppet::puppetmaster::linux {
 
     Service[puppetmaster]{
         require +> Package[puppet-server],
-    }
-}
-
-class puppet::puppetmaster::cluster inherits puppet::puppetmaster {
-    include mongrel, nginx
-
-    Service[puppetmaster]{
-        require +> Service[ngnix],
-    }
-
-    File[puppet_config] {
-        require => [ Package[mongrel], Package[nginx], File[nginx_config] ],
-    }
-
-    case $operatingsystem {
-        gentoo, centos: {
-            file{"/etc/init.d/puppetmaster":
-                source => "puppet://$server/puppet/init.d/puppetmaster.${operatingsystem}",        
-                owner => root, group => 0, mode => 0755; 
-            }
-        }
     }
 }
 
