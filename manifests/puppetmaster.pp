@@ -126,7 +126,7 @@ define puppet::puppetmaster::hasdb::mysql(
 
     @@mysql_grant{"${dbuser}@$${dbconnectinghost}/${dbname}":
         privileges => all,
-        require => Mysql_user['munin@localhost'],
+        require => Mysql_user["${dbuser}@{dbconnectinghost}"],
         tag => "mysql_${dbhostfqdn}",
     }
 }
