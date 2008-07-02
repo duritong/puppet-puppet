@@ -31,6 +31,7 @@ class puppet::puppetmaster::linux::cluster inherits puppet::puppetmaster::linux 
     Service[puppetmaster]{
         require +> Service[ngnix],
     }
+}
 class puppet::puppetmaster::package::cluster inherits puppet::puppetmaster::package {
     Service[puppetmaster]{
         require +> Service[ngnix],
