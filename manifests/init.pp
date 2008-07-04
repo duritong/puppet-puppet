@@ -24,6 +24,7 @@ class puppet {
     case $kernel {
         linux: { case $operatingsystem {
                     gentoo:  { include puppet::gentoo }
+                    centos:  { include puppet::centos }
                     default: { include puppet::linux}
                  }
         }
@@ -80,6 +81,15 @@ class puppet::gentoo inherits puppet::linux {
     # as we use sometimes the init script to test
     Service[puppet]{
         hasstatus => false,
+    }
+}
+class puppet::centos inherits puppet::linux {
+    file{'/etc/sysconfig/puppet':
+        source => [ "puppet://$server/files/puppet/sysconfig/${fqdn}/puppet",
+                    "puppet://$server/files/puppet/sysconfig/puppet",
+                    "puppet://$server/puppet/sysconfig/puppet" ],
+        notify => Service[puppet],
+        user => root, group => 0, mode => 0644;
     }
 }
 class puppet::openbsd {
