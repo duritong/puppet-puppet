@@ -89,7 +89,7 @@ class puppet::centos inherits puppet::linux {
                     "puppet://$server/files/puppet/sysconfig/puppet",
                     "puppet://$server/puppet/sysconfig/puppet" ],
         notify => Service[puppet],
-        user => root, group => 0, mode => 0644;
+        owner => root, group => 0, mode => 0644;
     }
 }
 class puppet::openbsd {
