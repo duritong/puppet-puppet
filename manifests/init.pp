@@ -25,6 +25,7 @@ class puppet {
         linux: { case $operatingsystem {
                     gentoo:  { include puppet::gentoo }
                     centos:  { include puppet::centos }
+                    debian:  { include puppet::debian }
                     default: { include puppet::linux}
                  }
         }
@@ -61,6 +62,7 @@ class puppet::linux {
         ensure => running,
         enable => true,
         hasstatus => true,
+        hasrestart => true,
         pattern => puppetd,
         require => Package[puppet],
     }
@@ -79,6 +81,12 @@ class puppet::gentoo inherits puppet::linux {
         category => 'dev-ruby',
     }
     # as we use sometimes the init script to test
+    Service[puppet]{
+        hasstatus => false,
+    }
+}
+class puppet::debian inherits puppet::linux {
+    # there is really no status cmd for it
     Service[puppet]{
         hasstatus => false,
     }
