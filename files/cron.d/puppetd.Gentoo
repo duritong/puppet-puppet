@@ -1,1 +1,4 @@
-#0 * * * *   root    /bin/ps ax | /bin/grep -v grep | /bin/grep puppetd > /dev/null || /etc/init.d/puppet restart
+# check if puppet is running
+# 0 * * * *   root    /bin/ps ax | /bin/grep -v grep | /bin/grep puppetd > /dev/null || /etc/init.d/puppet restart
+# restart puppet once in a while and randomly delay the restart between 0 and 32 minutes -> splay puppetmaster hammering
+# 0 22 * * */2   root   sleep `echo $RANDOM/1000*60 | bc` &&  /etc/init.d/puppet restart > /dev/null

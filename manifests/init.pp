@@ -50,11 +50,8 @@ class puppet {
 }
 
 class puppet::linux {
-    package{'puppet':
-        ensure => present,
-    }
-
-    package{'facter':
+    # package bc needed for cron
+    package{ [ 'puppet', 'facter', 'bc' ]:
         ensure => present,
     }
 
