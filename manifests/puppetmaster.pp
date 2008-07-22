@@ -4,7 +4,8 @@ import "storeconfigs.pp"
 
 class puppet::puppetmaster inherits puppet {
     case $operatingsystem {
-        centos,debian, redhat: { include puppet::puppetmaster::package }
+        debian: { include puppet::puppetmaster::package }
+        centos: { include puppet::puppetmaster::centos }
         default: {
             case $kernel {
                 linux: { include puppet::puppetmaster::linux }
@@ -40,27 +41,6 @@ class puppet::puppetmaster inherits puppet {
         source => [ "puppet://$server/puppet/cron.d/puppetmaster.${operatingsystem}",
                     "puppet://$server/puppet/cron.d/puppetmaster" ],
         owner => root, group => 0, mode => 0644;
-    }
-}
-
-class puppet::puppetmaster::linux inherits puppet::linux {
-
-    service{'puppetmaster':
-        ensure => running,
-        enable => true,
-        require => [ Package[puppet] ],
-    }
-    
-    Service[puppet]{
-        require +> Service[puppetmaster], 
-    }
-}
-
-class puppet::puppetmaster::package inherits puppet::puppetmaster::linux {
-    package { puppet-server: ensure => present }
-
-    Service[puppetmaster]{
-        require +> Package[puppet-server],
     }
 }
 
