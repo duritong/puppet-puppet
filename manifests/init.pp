@@ -3,7 +3,7 @@
 # modules/puppet/manifests/init.pp - manage puppet stuff
 # original by luke kanies
 # http://github.com/lak
-# adapted by puzzel itc
+# adapted by puzzle itc
 # merged with immerda project group's
 # solution
 #
