@@ -12,6 +12,10 @@ class puppet::puppetmaster inherits puppet {
             }
         }
     }
+    include puppet::puppetmaster::base
+}
+
+class puppet::puppetmaster::base inherits puppet::base {
 
     File[puppet_config]{
         source => [ "puppet://$server/files/puppet/master/puppet.conf",
@@ -43,6 +47,7 @@ class puppet::puppetmaster inherits puppet {
         owner => root, group => 0, mode => 0644;
     }
 }
+
 
 define puppet::puppetmaster::hasdb(
     $dbtype = 'mysql',
