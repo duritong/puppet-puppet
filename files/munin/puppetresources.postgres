@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# Plugin to monitor resource count as managed by puppet
+#
+# Parameters:
+#
+#   config   (required)
+
+function select_resources() {
+    psql -c "select count(*) as count, hosts.name from resources join hosts on (host_id = hosts.id) group by hosts.name order by count(*) DESC" -A -F " " -t puppet
+}
+
+if [ "$1" = "config" ]; then
+
+    echo 'graph_title Puppet Resources'
+    echo 'graph_args -l 0 --base 1000'
+    echo 'graph_vlabel configured resources'
+    echo 'graph_category other'
+    select_resources | while read count hostname; do
+        graphname="$(echo "$hostname" | tr '.-' _)"
+        echo "$graphname.label $hostname"
+        echo "$graphname.type GAUGE"
+    done
+    exit 0
+fi
+
+select_resources | while read count hostname; do
+    graphname="$(echo "$hostname" | tr '.-' _)"
+    echo "$graphname.value $count"
+done
+
+if [ -f /proc/vmstat ]; then
+    awk '/pswpin/ { print "swap_in.value " $2 } /pswpout/ { print "swap_out.value " $2 }' < /proc/vmstat 
+else
+    awk '/swap/ { print "swap_in.value " $2 "\nswap_out.value " $3 }' < /proc/stat 
+fi
+

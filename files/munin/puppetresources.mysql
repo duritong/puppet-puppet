@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# Plugin to monitor resource count as managed by puppet
+# Written by David Schmitts
+# Adapted by Marcel Haerry, Puzzle ITC <haerry(at)puzzle.ch
+#
+# Parameters:
+#
+#   config   (required)
+#
+# Config variables:
+# 
+#   mysqlopts: options for mysql
+
+MYSQL_OPTS=${mysqlopts:-}
+MYSQL_DB=${puppetdb:-puppet}
+
+function select_resources() {
+    echo "select count(*) as count, hosts.name from resources join hosts on (host_id = hosts.id) group by hosts.name order by count(*) DESC" | mysql $MYSQL_OPTS -N $MYSQL_DB
+}
+
+if [ "$1" = "config" ]; then
+
+    echo 'graph_title Puppet Resources'
+    echo 'graph_args -l 0 --base 1000'
+    echo 'graph_vlabel configured resources'
+    echo 'graph_category other'
+    select_resources | while read count hostname; do
+        graphname="$(echo "$hostname" | tr '.-' _)"
+        echo "$graphname.label $hostname"
+        echo "$graphname.type GAUGE"
+    done
+    exit 0
+fi
+
+select_resources | while read count hostname; do
+    graphname="$(echo "$hostname" | tr '.-' _)"
+    echo "$graphname.value $count"
+done
