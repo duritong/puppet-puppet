@@ -127,9 +127,8 @@ class puppet::openbsd inherits puppet::base {
         hasstatus => false,
         hasrestart => false,
     }
-    exec{'enable_puppet_on_boot':
-        command => 'echo "if [ -x /usr/local/bin/puppetd ]; then echo -n \' puppetd\'; /usr/local/bin/puppetd; fi" >> /etc/rc.local',
-        unless => 'grep -q "puppetd" /etc/rc.local',
+    openbsd::add_to_rc_local{'puppetd':
+        binary => '/usr/local/bin/puppetd',
     }
     cron { 'puppetd_check':
         command => '/bin/ps ax | /bin/grep -v grep | /bin/grep -q puppetd || (sleep `echo $RANDOM/2000*60 | bc` && /usr/local/bin/puppetd)',
