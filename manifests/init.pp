@@ -131,7 +131,7 @@ class puppet::openbsd inherits puppet::base {
         binary => '/usr/local/bin/puppetd',
     }
     cron { 'puppetd_check':
-        command => '/bin/ps ax | /bin/grep -v grep | /bin/grep -q puppetd || (sleep `echo $RANDOM/2000*60 | bc` && /usr/local/bin/puppetd)',
+        command => '/bin/ps ax | /usr/bin/grep -v grep | /usr/bin/grep -q puppetd || (sleep `echo $RANDOM/2000*60 | bc` && /usr/local/bin/puppetd)',
         user => root,
         minute => 0,
     }
