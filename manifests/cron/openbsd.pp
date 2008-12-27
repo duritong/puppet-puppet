@@ -14,7 +14,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
     }
 
     cron { 'puppetd_restart':
-        command => "puppetd --onetime --no-daemonize --splay true --config=$puppet_config",
+        command => "/usr/local/bin/puppetd --onetime --no-daemonize --splay true --config=$puppet_config",
         user => 'root',
         minute => [0,30],
     }
