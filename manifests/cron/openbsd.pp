@@ -9,7 +9,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
     Cron['puppetd_check']{
         ensure => absent,    
     }
-    Cron['puppetd_check']{
+    Cron['puppetd_restart']{
         ensure => absent,    
     }
 
