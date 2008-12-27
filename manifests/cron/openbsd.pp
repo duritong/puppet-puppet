@@ -13,7 +13,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
         ensure => absent,    
     }
 
-    cron { 'puppetd_restart':
+    cron { 'puppetd_run':
         command => "/usr/local/bin/puppetd --onetime --no-daemonize --splay true --config=$puppet_config",
         user => 'root',
         minute => [0,30],
