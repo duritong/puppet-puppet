@@ -12,7 +12,5 @@ Puppet[:name] = "puppetmasterd"
 Puppet::Node::Facts.terminus_class = :yaml
 
 Puppet::Node::Facts.search("*").sort { |a,b| a.name <=> b.name }.each do |node|
-  if ((Time.now - node.values[:_timestamp]) / 60).floor > 720 then 
-    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - node.values[:_timestamp]) / 60).floor} minutes ago"
-  end
+    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - node.values[:_timestamp]) / 60).floor} minutes ago" if (((Time.now - node.values[:_timestamp]) / 60).floor > 60 or (not ARGV[0].nil? and ARGV[0].to_s == '--all'))
 end
