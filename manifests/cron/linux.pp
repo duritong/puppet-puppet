@@ -7,6 +7,6 @@ class puppet::cron::linux inherits puppet::linux {
     File['/etc/cron.d/puppetd.cron']{
         source => undef,
         content => "# run puppet
-0,30 * * * * root puppetd --onetime --no-daemonize --splay true --config=$puppet_config",
+0,30 * * * * root puppetd --onetime --no-daemonize --splay true --config=$puppet_config\n",
     }
 }
