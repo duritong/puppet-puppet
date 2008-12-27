@@ -14,7 +14,7 @@ class puppet::puppetmaster inherits puppet {
     }
     include puppet::puppetmaster::base
 
-    puppet::puppetmaster::checklastrun
+    include puppet::puppetmaster::checklastrun
 }
 
 class puppet::puppetmaster::base inherits puppet::base {
