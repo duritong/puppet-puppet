@@ -1,5 +1,4 @@
 class puppet::puppetmaster::checklastrun {
-    include ibp::opt::bin
     file{'/opt/bin/puppetlast':
         source => [ "puppet://$server/files/puppet/master/puppetlast",
                     "puppet://$server/puppet/master/puppetlast"],
