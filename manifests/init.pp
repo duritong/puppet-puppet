@@ -1,6 +1,6 @@
 #
 # puppet module
-# modules/puppet/manifests/init.pp - manage puppet stuff
+# manifests/init.pp - manage puppet stuff
 # original by luke kanies
 # http://github.com/lak
 # adapted by puzzle itc
@@ -17,8 +17,6 @@
 # General Public License version 3 as published by 
 # the Free Software Foundation.
 #
-
-# modules_dir { "puppet": }
 
 class puppet {
     case $kernel {
