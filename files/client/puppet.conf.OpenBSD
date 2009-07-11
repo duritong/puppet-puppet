@@ -34,3 +34,4 @@
     report=true
     server=puppet.glei.ch
 
+    logdest=/var/log/puppet/puppet.log
