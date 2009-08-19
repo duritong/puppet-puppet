@@ -48,6 +48,11 @@ class puppet::puppetmaster::base inherits puppet::base {
                     "puppet://$server/puppet/cron.d/puppetmaster" ],
         owner => root, group => 0, mode => 0644;
     }
+
+    file{'/etc/cron.daily/puppet_reports_cleanup.sh':
+        content => "#!/bin/bash\nfind /var/log/puppet/reports/ -maxdepth 2 -type f -ctime +30 -exec rm {} \\;\n"
+        owner => root, group => 0, mode => 0700;
+    }
 }
 
 
