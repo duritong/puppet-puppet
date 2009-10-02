@@ -32,4 +32,7 @@ class puppet {
         default: { include puppet::base }
     }
 
+    if $use_shorewall {
+      include shorewall::rules::out::puppet
+    }
 }
