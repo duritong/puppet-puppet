@@ -3,7 +3,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
     case $puppet_config {
         '': { $puppet_config = '/etc/puppet/puppet.conf' }
     }
-    Openbsd::Add_to_rc_local['puppetd']{
+    Openbsd::Rc_local['puppetd']{
         ensure => 'absent',
     }
     Cron['puppetd_check']{
