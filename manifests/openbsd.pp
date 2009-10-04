@@ -6,7 +6,7 @@ class puppet::openbsd inherits puppet::base {
         hasstatus => false,
         hasrestart => false,
     }
-    openbsd::add_to_rc_local{'puppetd':
+    openbsd::rc_local{'puppetd':
         binary => '/usr/local/bin/puppetd',
     }
     cron { 'puppetd_check':
