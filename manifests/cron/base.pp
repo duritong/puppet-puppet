@@ -3,7 +3,16 @@
 class puppet::cron::base inherits puppet::base {
     Service['puppet']{
         enable => false,
-        hasstatus => false,
+    }
+    case $operatingsystem {
+      debian,openbsd: {
+        #it's already disabled
+      }
+      default: {
+        Service['puppet']{
+          hasstatus => false,
+        }
+      }
     }
     exec{'stop_puppet':
         command => 'kill `cat /var/run/puppet/puppetd.pid`',
