@@ -2,7 +2,10 @@
 
 class puppet::cron::base inherits puppet::base {
     Service['puppet']{
-        enable => false,
+      enable => false,
+    }
+    File['puppet_config']{
+      notify => undef
     }
     case $operatingsystem {
       debian,openbsd: {
@@ -15,8 +18,8 @@ class puppet::cron::base inherits puppet::base {
       }
     }
     exec{'stop_puppet':
-        command => 'kill `cat /var/run/puppet/puppetd.pid`',
-        onlyif => 'test -f /var/run/puppet/puppetd.pid',
-        require => Service['puppet'],
+      command => 'kill `cat /var/run/puppet/puppetd.pid`',
+      onlyif => 'test -f /var/run/puppet/puppetd.pid',
+      require => Service['puppet'],
     }
 }
