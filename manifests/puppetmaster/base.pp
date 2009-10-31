@@ -16,7 +16,7 @@ class puppet::puppetmaster::base inherits puppet::base {
                     "puppet://$server/files/puppet/master/fileserver.conf",
                     "puppet://$server/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
-        owner => root, group => 0, mode => 600;
+        owner => root, group => puppet, mode => 640;
     }
 
     if $puppetmaster_storeconfigs {
