@@ -5,6 +5,7 @@
 # changed by admin+puppet(at)immerda.ch to fit our needs
 #
 require 'puppet'
+require 'time'
 
 Puppet[:config] = "/etc/puppet/puppet.conf"
 Puppet.parse_config
@@ -12,5 +13,5 @@ Puppet[:name] = "puppetmasterd"
 Puppet::Node::Facts.terminus_class = :yaml
 
 Puppet::Node::Facts.search("*").sort { |a,b| a.name <=> b.name }.each do |node|
-    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - node.values[:_timestamp]) / 60).floor} minutes ago" if (((Time.now - node.values[:_timestamp]) / 60).floor > 60 or (not ARGV[0].nil? and ARGV[0].to_s == '--all'))
+    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor} minutes ago" if (((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor > 120 or (not ARGV[0].nil? and ARGV[0].to_s == '--all'))
 end
