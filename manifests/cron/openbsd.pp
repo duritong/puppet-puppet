@@ -14,7 +14,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
     }
 
     cron { 'puppetd_run':
-        command => "/usr/local/bin/puppetd --onetime --no-daemonize --splay --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
+        command => "/usr/local/sbin/puppetd --onetime --no-daemonize --splay --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
         user => 'root',
         minute => [0,30],
     }
