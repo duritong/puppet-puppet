@@ -1,7 +1,7 @@
 class puppet::puppetmaster::base inherits puppet::base {
 
     File[puppet_config]{
-        source => [ "puppet://$server/files/puppet/master/puppet.conf",
+        source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
                     "puppet://$server/modules/puppet/master/puppet.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
     }
@@ -12,8 +12,8 @@ class puppet::puppetmaster::base inherits puppet::base {
     }
 
     file { "$real_puppet_fileserverconfig":
-        source => [ "puppet://$server/files/puppet/master/${fqdn}/fileserver.conf",
-                    "puppet://$server/files/puppet/master/fileserver.conf",
+        source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
+                    "puppet://$server/modules/site-puppet/master/fileserver.conf",
                     "puppet://$server/modules/puppet/master/fileserver.conf" ],
         notify => [Service[puppet],Service[puppetmaster] ],
         owner => root, group => puppet, mode => 640;
