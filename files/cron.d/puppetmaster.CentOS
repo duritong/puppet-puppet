@@ -1,3 +1,0 @@
-# we restart puppetmaster every 4 hours to avoid memory problems
-0 */4 * * * root /etc/init.d/puppetmaster restart > /dev/null
-
