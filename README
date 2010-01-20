@@ -1,0 +1,14 @@
+Puppet-Module for configuring Puppet itself, both the master and the clients
+============================================================================
+
+Use a seperate local module called "site-puppet", where you place your customized 
+files, under:
+ site-puppet/files/master/fileserver.conf
+ site-puppet/files/master/puppet.conf
+
+those files in this module are just examples.
+
+Usage
+-----
+
+...tbc...
