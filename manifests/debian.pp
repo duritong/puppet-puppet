@@ -14,12 +14,4 @@ class puppet::debian inherits puppet::linux {
         path => '/etc/cron.d/puppetd',
     }
 
-    service{'cron':
-        name => 'cron',
-        enable => true,
-        ensure => running,
-        hasstatus => true,
-    }
-
-
 }
