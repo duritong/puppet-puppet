@@ -20,6 +20,8 @@ ARGV << "--rack"
 ARGV << "--vardir" << "/var/lib/puppet"
 ARGV << "--ssldir" << "/var/lib/puppet/ssl"
 
+# if you use puppet-dashboard:
+#ARGV << "--reports" << "puppet_dashboard"
 
 require 'puppet/application/puppetmasterd'
 # we're usually running inside a Rack::Builder.new {} block,
