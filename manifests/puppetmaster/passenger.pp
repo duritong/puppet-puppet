@@ -4,7 +4,8 @@ class puppet::puppetmaster::passenger {
    
     case $operatingsystem {
         debian:    { include puppet::puppetmaster::passenger::debian  }
-        defaults: { include  puppet::puppetmaster::passenger::base }    	
+        defaults: { notice ( "class puppet::puppetmaster::passenger::base needs to be configured for using passenger with non-debian OS !" )
+		    include  puppet::puppetmaster::passenger::base }    	
 	}
 }
 
@@ -21,7 +22,6 @@ class puppet::puppetmaster::passenger::debian inherits puppet::puppetmaster::pas
 }
 
 class puppet::puppetmaster::passenger::base {
-    notice ( "class puppet::puppetmaster::passenger::base needs to be configured for using passenger with non-debian OS !" )
 
     include apache
     include passenger::apache
