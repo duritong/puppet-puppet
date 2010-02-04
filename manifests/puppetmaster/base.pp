@@ -1,9 +1,18 @@
 class puppet::puppetmaster::base inherits puppet::base {
+    if defined (puppet::cron) { 
+	File[puppet_config]{
+	    source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
+			"puppet://$server/modules/puppet/master/puppet.conf" ],
+	    notify => Service[puppetmaster],
+	}
+    }
+    else {
+	File[puppet_config]{
+	    source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
+			"puppet://$server/modules/puppet/master/puppet.conf" ],
+	    notify => [Service[puppet],Service[puppetmaster] ],
+	}
 
-    File[puppet_config]{
-        source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
-                    "puppet://$server/modules/puppet/master/puppet.conf" ],
-        notify => [Service[puppet],Service[puppetmaster] ],
     }
 
     $real_puppet_fileserverconfig = $puppet_fileserverconfig ? {
@@ -12,12 +21,12 @@ class puppet::puppetmaster::base inherits puppet::base {
     }
 
     file { "$real_puppet_fileserverconfig":
-        source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
-                    "puppet://$server/modules/site-puppet/master/fileserver.conf",
-                    "puppet://$server/modules/puppet/master/fileserver.conf" ],
-        notify => [Service[puppet],Service[puppetmaster] ],
+	 source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
+	 	     "puppet://$server/modules/site-puppet/master/fileserver.conf",
+	 	     "puppet://$server/modules/puppet/master/fileserver.conf" ],
+	 notify => [Service[puppet],Service[puppetmaster] ],
         owner => root, group => puppet, mode => 640;
-    }
+   } 
 
     if $puppetmaster_storeconfigs {
         include puppet::puppetmaster::storeconfigs
