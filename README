@@ -8,6 +8,11 @@ files, under:
 
 those files in this module are just examples.
 
+Depends on Modules
+------------------
+- bc
+- cron
+
 Usage
 -----
 
