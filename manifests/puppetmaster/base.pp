@@ -32,11 +32,14 @@ class puppet::puppetmaster::base inherits puppet::base {
         include puppet::puppetmaster::storeconfigs
     }
 
-    # restart the master from time to time to avoid memory problems
-    file{'/etc/cron.d/puppetmaster.cron':
-        source => [ "puppet://$server/modules/puppet/cron.d/puppetmaster.${operatingsystem}",
-                    "puppet://$server/modules/puppet/cron.d/puppetmaster" ],
-        owner => root, group => 0, mode => 0644;
+
+    if ! defined (puppet::puppetmaster::passenger) {
+	# restart the master from time to time to avoid memory problems
+	file{'/etc/cron.d/puppetmaster.cron':
+	    source => [ "puppet://$server/modules/puppet/cron.d/puppetmaster.${operatingsystem}",
+			"puppet://$server/modules/puppet/cron.d/puppetmaster" ],
+	    owner => root, group => 0, mode => 0644;
+	}
     }
 
     file{'/etc/cron.daily/puppet_reports_cleanup.sh':
