@@ -1,0 +1,32 @@
+Puppet-Module for configuring Puppet itself, both the master and the clients
+============================================================================
+
+Use a seperate local module called "site-puppet", where you place your customized 
+files, under:
+ site-puppet/files/master/fileserver.conf
+ site-puppet/files/master/puppet.conf
+
+those files in this module are just examples.
+
+Depends on Modules
+------------------
+- bc
+- cron
+
+Usage
+-----
+in your site.pp, i.e. :
+
+    $puppet_crontime = "0,12 * * * *"
+    include puppet::cron
+    
+    include puppet::puppetmaster
+    
+    include puppet::puppetmaster::passenger
+    
+    $puppet_storeconfig_password="..."
+    include puppet::puppetmaster::storeconfigs
+
+
+
+...tbc...

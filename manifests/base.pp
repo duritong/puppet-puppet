@@ -11,7 +11,9 @@ class puppet::base {
                 "puppet://$server/modules/puppet/client/puppet.conf.$operatingsystem",
                 "puppet://$server/modules/puppet/client/puppet.conf" ],
         notify => Service[puppet],
-        owner => root, group => 0, mode => 600;
+	# if puppetmasterd is deployed by apache2/passenger it needs to read puppet.conf 
+	# therefore it must be readable by puppet
+        owner => puppet, group => 0, mode => 600;  
     }
     service{'puppet':
         ensure => running,

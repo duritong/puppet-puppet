@@ -24,7 +24,7 @@ class puppet {
             case $operatingsystem {
                 gentoo:  { include puppet::gentoo }
                 centos:  { include puppet::centos }
-                debian:  { include puppet::debian }
+                debian,ubuntu:  { include puppet::debian }
                 default: { include puppet::linux}
             }
         }
