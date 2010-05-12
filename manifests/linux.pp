@@ -22,6 +22,6 @@ class puppet::linux inherits puppet::base {
         source => [ "puppet://$server/modules/puppet/cron.d/puppetd.${operatingsystem}",
                     "puppet://$server/modules/puppet/cron.d/puppetd" ],
         owner => root, group => 0, mode => 0644,
-	notify => service["cron"];
+        notify => Service['cron'];
     }
 }
