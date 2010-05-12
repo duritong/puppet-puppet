@@ -2,7 +2,7 @@
 
 class puppet::puppetmaster::passenger inherits puppet::puppetmaster::base {
 
-    include passenger
+    include ::passenger
 
     # A reference configuration is available at :
     # http://github.com/reductivelabs/puppet/tree/master/ext/rack
