@@ -1,14 +1,10 @@
 # manifests/puppetmaster/package.pp
 
 class puppet::puppetmaster::package inherits puppet::puppetmaster::linux {
+
     case $operatingsystem {
-	 debian: { $puppetmaster_package="puppetmaster" }
-         default: { $puppetmaster_package="puppet-server" }
+        centos: { include puppet::puppetmaster::package::centos }
+        default: { include puppet::puppetmaster::package::base }
     }
 
-    package { $puppetmaster_package: ensure => present }
-
-    Service[puppetmaster]{
-        require +> Package[$puppetmaster_package],
-    }
 }
