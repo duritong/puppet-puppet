@@ -10,13 +10,13 @@ class puppet::linux inherits puppet::base {
         ensure => $facter_ensure_version,
     }
 
-    # package bc needed for cron
+    # package bc needed for cron job
     include bc
     Service['puppet']{
         require => Package[puppet],
     }
 
-    include cron
+    include ::cron
 
     file{'/etc/cron.d/puppetd.cron':
         source => [ "puppet://$server/modules/puppet/cron.d/puppetd.${operatingsystem}",
