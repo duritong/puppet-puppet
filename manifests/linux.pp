@@ -1,6 +1,21 @@
 class puppet::linux inherits puppet::base {
-    package{ [ 'puppet', 'facter' ]:
-        ensure => present,
+
+    $real_puppet_version = $puppet_version ? {
+        '' => 'present',
+        default => $puppet_version,
+    }
+    
+    $real_facter_version = $facter_version ? {
+        '' => 'present',
+        default => $facter_version,
+    }
+
+    package{ 'puppet':
+        ensure => $real_puppet_version,
+    }
+    
+    package{ 'facter':
+        ensure => $real_facter_version,
     }
 
     # package bc needed for cron

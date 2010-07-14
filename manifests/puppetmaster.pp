@@ -1,7 +1,7 @@
 # manifests/puppetmaster.pp
 class puppet::puppetmaster inherits puppet {
     case $operatingsystem {
-        debian: { include puppet::puppetmaster::package }
+        debian: { include puppet::puppetmaster::debian }
         centos: { include puppet::puppetmaster::centos }
         default: {
             case $kernel {
