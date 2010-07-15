@@ -5,14 +5,6 @@ class puppet::cron::base inherits puppet::base {
       enable => false,
     }
 
-    if defined (puppet::puppetmaster) {}
-    else {
-	File['puppet_config']{
-	  notify => undef
-	}
-    }
-
-
     case $operatingsystem {
       debian,openbsd,ubuntu: {
         #it's already disabled

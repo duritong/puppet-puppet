@@ -1,19 +1,9 @@
 class puppet::puppetmaster::base inherits puppet::base {
-    if defined (puppet::cron) { 
 	File[puppet_config]{
 	    source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
 			"puppet://$server/modules/puppet/master/puppet.conf" ],
 	    notify => Service[puppetmaster],
 	}
-    }
-    else {
-	File[puppet_config]{
-	    source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
-			"puppet://$server/modules/puppet/master/puppet.conf" ],
-	    notify => [Service[puppet],Service[puppetmaster] ],
-	}
-
-    }
 
     $real_puppet_fileserverconfig = $puppet_fileserverconfig ? {
         '' => "/etc/puppet/fileserver.conf",
