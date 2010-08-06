@@ -35,6 +35,8 @@ class puppet::puppetmaster inherits puppet {
 
   if $puppetmaster_cleanup_reports {
     include puppet::puppetmaster::cleanup_reports
+  } else {
+    include puppet::puppetmaster::cleanup_reports::disable
   }
 
   if $use_shorewall {
