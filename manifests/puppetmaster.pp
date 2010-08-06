@@ -13,6 +13,13 @@ class puppet::puppetmaster inherits puppet {
   include puppet::puppetmaster::base
   include puppet::puppetmaster::checklastrun
 
+  if $puppetmaster_mode == 'passenger' {
+    include puppet::puppetmaster::pasenger
+  } elsif $puppetmaster_mode == 'cluster' {
+    include puppet::puppetmaster::cluster
+  }
+
+
   if $use_shorewall {
     include shorewall::rules::puppet::master
   }

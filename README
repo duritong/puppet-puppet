@@ -14,18 +14,25 @@ Depends on Modules
 
 Usage
 -----
+If you want to run the puppetmaster in a non-webrick based
+mode, you can set $puppetmaster_mode either to:
+
+* passenger, run puppetmaster as a passenger application
+* cluster, run puppetmaster as a mongrel based cluster
+
+In both cases you have to setup the appropriate frontends
+(apache vhost configuration/nginx vhost configuration) on
+your own.
+
 in your site.pp, i.e. :
 
     $puppet_crontime = "0,12 * * * *"
     include puppet::cron
     
+    $puppetmaster_mode = 'passenger'
     include puppet::puppetmaster
-    
-    include puppet::puppetmaster::passenger
     
     $puppet_storeconfig_password="..."
     include puppet::puppetmaster::storeconfigs
-
-
 
 ...tbc...

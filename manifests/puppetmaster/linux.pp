@@ -1,17 +1,9 @@
 class puppet::puppetmaster::linux inherits puppet::linux {
   
-  if defined (puppet::puppetmaster::passenger) {
-	  service{'puppetmaster':
-	    ensure => running,
-  	  #name => apache2,
-	    #enable => true,
-  	  pattern => 'apache2',
-	    hasstatus => true,
-  	  start => '/etc/init.d/apache2 start',
-	    stop => '/etc/init.d/apache2 start',
-	    restart => '/etc/init.d/apache2 restart',
-  	  status => 'pgrep apache2',
-	    require => [ Package[puppet] ],
+  if $puppetmaster_mode == 'passenger' {
+	  exec{'notify_passenger_puppetmaster':
+      refreshonly => true,
+      command => 'touch /etc/puppet/rack/tmp/restart.txt && sleep 1 && rm /etc/puppet/rack/tmp/restart.txt',
 	  }
   } else {
 	  service{'puppetmaster':

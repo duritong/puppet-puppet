@@ -1,17 +1,16 @@
 class puppet::puppetmaster::base inherits puppet::base {
-	File[puppet_config]{
-	  source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
-			          "puppet://$server/modules/puppet/master/puppet.conf" ],
-	  notify => Service[puppetmaster],
-	}
+  File[puppet_config]{
+    source => [ "puppet://$server/modules/site-puppet/master/puppet.conf",
+                "puppet://$server/modules/puppet/master/puppet.conf" ],
+    notify => Service[puppetmaster],
+  }
 
   if !$puppet_fileserverconfig { $puppet_fileserverconfig  = '/etc/puppet/fileserver.conf' }
 
   file { "$puppet_fileserverconfig":
-	  source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
-	 	            "puppet://$server/modules/site-puppet/master/fileserver.conf",
-          	 	  "puppet://$server/modules/puppet/master/fileserver.conf" ],
-	  notify => Service[puppetmaster],
+    source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
+                "puppet://$server/modules/site-puppet/master/fileserver.conf",
+                "puppet://$server/modules/puppet/master/fileserver.conf" ],
     owner => root, group => puppet, mode => 640;
   } 
 
@@ -20,13 +19,21 @@ class puppet::puppetmaster::base inherits puppet::base {
   }
 
 
-  if ! defined (puppet::puppetmaster::passenger) {
-	  # restart the master from time to time to avoid memory problems
-	  file{'/etc/cron.d/puppetmaster.cron':
-	    source => [ "puppet://$server/modules/puppet/cron.d/puppetmaster.${operatingsystem}",
-			            "puppet://$server/modules/puppet/cron.d/puppetmaster" ],
-	    owner => root, group => 0, mode => 0644;
-	  }
+  if $puppetmaster_mode == 'passenger' {
+    include puppet::puppetmaster::pasenger
+    File[$puppet_fileserverconfig]{
+      notify => Exec['notify_passenger_puppetmaster'],
+    }
+    File[puppet_config]{
+      notify => Exec['notify_passenger_puppetmaster'],
+    }
+  } else {
+    File[$puppet_fileserverconfig]{
+      notify => Service[puppetmaster],
+    }
+    File[puppet_config]{
+      notify => Service[puppetmaster],
+    }
   }
 
   # clean up reports older than 30 days
