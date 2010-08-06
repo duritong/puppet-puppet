@@ -35,10 +35,4 @@ class puppet::puppetmaster::base inherits puppet::base {
       notify => Service[puppetmaster],
     }
   }
-
-  # clean up reports older than 30 days
-  file{'/etc/cron.daily/puppet_reports_cleanup.sh':
-    content => "#!/bin/bash\nfind /var/log/puppet/reports/ -maxdepth 2 -type f -ctime +30 -exec rm {} \\;\n",
-    owner => root, group => 0, mode => 0700;
-  }
 }

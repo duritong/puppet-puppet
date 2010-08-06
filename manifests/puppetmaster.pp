@@ -19,6 +19,13 @@ class puppet::puppetmaster inherits puppet {
     include puppet::puppetmaster::cluster
   }
 
+  case $puppetmaster_cleanup_reports {
+    '': { $puppetmaster_cleanup_reports = '30' }
+  }
+
+  if $puppetmaster_cleanup_reports {
+    include puppet::puppetmaster::cleanup_reports
+  }
 
   if $use_shorewall {
     include shorewall::rules::puppet::master
