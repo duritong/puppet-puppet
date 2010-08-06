@@ -19,20 +19,20 @@
 #
 
 class puppet {
-    case $kernel {
-        linux: { 
-            case $operatingsystem {
-                gentoo:  { include puppet::gentoo }
-                centos:  { include puppet::centos }
-                debian,ubuntu:  { include puppet::debian }
-                default: { include puppet::linux}
-            }
-        }
-        openbsd: { include puppet::openbsd }
-        default: { include puppet::base }
+  case $kernel {
+    linux: { 
+      case $operatingsystem {
+        gentoo: { include puppet::gentoo }
+        centos: { include puppet::centos }
+        debian,ubuntu: { include puppet::debian }
+        default: { include puppet::linux}
+      }
     }
+    openbsd: { include puppet::openbsd }
+    default: { include puppet::base }
+  }
 
-    if $use_shorewall {
-      include shorewall::rules::out::puppet
-    }
+  if $use_shorewall {
+    include shorewall::rules::out::puppet
+  }
 }
