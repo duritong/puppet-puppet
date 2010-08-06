@@ -1,34 +1,27 @@
 class puppet::linux inherits puppet::base {
 
-    $real_puppet_version = $puppet_version ? {
-        '' => 'present',
-        default => $puppet_version,
-    }
-    
-    $real_facter_version = $facter_version ? {
-        '' => 'present',
-        default => $facter_version,
-    }
-
+    if $puppet_ensure_version == '' { $puppet_ensure_version = 'installed' }
     package{ 'puppet':
-        ensure => $real_puppet_version,
-    }
-    
-    package{ 'facter':
-        ensure => $real_facter_version,
+        ensure => $puppet_ensure_version,
     }
 
-    # package bc needed for cron
+    if $facter_ensure_version == '' { $facter_ensure_version = 'installed' }
+    package{ 'facter':
+        ensure => $facter_ensure_version,
+    }
+
+    # package bc needed for cron job
     include bc
     Service['puppet']{
         require => Package[puppet],
     }
 
+    include ::cron
 
     file{'/etc/cron.d/puppetd.cron':
         source => [ "puppet://$server/modules/puppet/cron.d/puppetd.${operatingsystem}",
                     "puppet://$server/modules/puppet/cron.d/puppetd" ],
         owner => root, group => 0, mode => 0644,
-	notify => service["cron"];
+        notify => Service['cron'];
     }
 }
