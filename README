@@ -13,7 +13,14 @@ Depends on Modules
 - bc
 
 Usage
+=====
+
+The module currently looks for values on different variables to adjust
+configuration of the master.
+
+Mode:
 -----
+
 If you want to run the puppetmaster in a non-webrick based
 mode, you can set $puppetmaster_mode either to:
 
@@ -24,12 +31,19 @@ In both cases you have to setup the appropriate frontends
 (apache vhost configuration/nginx vhost configuration) on
 your own.
 
+Reports cleanup:
+---------------
+
 By default we clean up reports older than 30 days. If you want to change
 that, you can set $puppetmaster_cleanup_reports to one of the following
 values:
 
 * 'X', where X is the amount of days you want to keep reports for
 * false, to disable reports cleanup
+
+
+Example:
+--------
 
 in your site.pp, i.e. :
 
