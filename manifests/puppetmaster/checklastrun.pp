@@ -8,6 +8,5 @@ class puppet::puppetmaster::checklastrun {
     content => "40 10,22 * * * root /usr/local/bin/puppetlast\n",
     require => File["/usr/local/bin/puppetlast"],
     owner => root, group => 0, mode => 0644,
-	  notify => service["cron"];
   }
 }
