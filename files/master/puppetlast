@@ -12,6 +12,16 @@ Puppet.parse_config
 Puppet[:name] = "puppetmasterd"
 Puppet::Node::Facts.terminus_class = :yaml
 
+all = false
+timeout = 120
+ARGV.each do |arg|
+  if arg.to_s == '--all'
+    all = true
+  else
+    timeout = arg.to_i
+  end
+end
+
 Puppet::Node::Facts.search("*").sort { |a,b| a.name <=> b.name }.each do |node|
-    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor} minutes ago" if (((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor > 120 or (not ARGV[0].nil? and ARGV[0].to_s == '--all'))
+    puts "#{node.name} #{node.expired? ? 'cached expired, ' : ''}last checked #{((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor} minutes ago" if (((Time.now - Time.parse(node.values[:_timestamp])) / 60).floor > timeout or all)
 end

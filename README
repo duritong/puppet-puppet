@@ -41,6 +41,18 @@ values:
 * 'X', where X is the amount of days you want to keep reports for
 * false, to disable reports cleanup
 
+Check last run:
+---------------
+
+We can check on the last run state of certain clients, to check whether
+they still check in. You can do that by setting the following variables:
+
+$puppetmaster_checklastrun
+
+* any cron time: '20 10,22 * * *' to run the script at a certain time
+  by cron. Default: 40 10,22 * * *
+* false: to disable check for last run
+
 
 Example:
 --------

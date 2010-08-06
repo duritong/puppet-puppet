@@ -5,7 +5,7 @@ class puppet::puppetmaster::checklastrun {
     owner => root, group => 0, mode => 0700;
   }
   file{'/etc/cron.d/puppetlast.cron':
-    content => "40 10,22 * * * root /usr/local/bin/puppetlast\n",
+    content => "${puppetmaster_checklastrun} root /usr/local/bin/puppetlast ${puppetmaster_checklastrun_timeout}\n",
     require => File["/usr/local/bin/puppetlast"],
     owner => root, group => 0, mode => 0644,
   }

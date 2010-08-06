@@ -11,7 +11,17 @@ class puppet::puppetmaster inherits puppet {
   }
 
   include puppet::puppetmaster::base
-  include puppet::puppetmaster::checklastrun
+
+
+  case $puppetmaster_checklastrun {
+    '': { $puppetmaster_checklastrun = '40 10,22 * * *'
+  }
+
+  if $puppetmaster_checklastrun {
+    include puppet::puppetmaster::checklastrun
+  } else {
+    include puppet::puppetmaster::checklastrun::disable
+  }
 
   if $puppetmaster_mode == 'passenger' {
     include puppet::puppetmaster::pasenger
