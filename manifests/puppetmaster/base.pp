@@ -11,7 +11,7 @@ class puppet::puppetmaster::base inherits puppet::base {
 	  source => [ "puppet://$server/modules/site-puppet/master/${fqdn}/fileserver.conf",
 	 	            "puppet://$server/modules/site-puppet/master/fileserver.conf",
           	 	  "puppet://$server/modules/puppet/master/fileserver.conf" ],
-	  notify => [ Service[puppet],Service[puppetmaster] ],
+	  notify => Service[puppetmaster],
     owner => root, group => puppet, mode => 640;
   } 
 
