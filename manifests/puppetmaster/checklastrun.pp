@@ -1,7 +1,7 @@
 class puppet::puppetmaster::checklastrun {
   file{"/usr/local/bin/puppetlast":
-    source => [ "puppet://$server/modules/site-puppet/master/puppetlast",
-                "puppet://$server/modules/puppet/master/puppetlast" ],
+    source => [ "puppet:///modules/site-puppet/master/puppetlast",
+                "puppet:///modules/puppet/master/puppetlast" ],
     owner => root, group => 0, mode => 0700;
   }
   file{'/etc/cron.d/puppetlast.cron':

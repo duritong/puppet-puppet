@@ -3,11 +3,11 @@ class puppet::base {
 
   file { 'puppet_config':
     path => "$puppet_config",
-    source => [ "puppet://$server/modules/site-puppet/client/${fqdn}/puppet.conf",
-                "puppet://$server/modules/site-puppet/client/puppet.conf.$operatingsystem",
-                "puppet://$server/modules/site-puppet/client/puppet.conf",
-                "puppet://$server/modules/puppet/client/puppet.conf.$operatingsystem",
-                "puppet://$server/modules/puppet/client/puppet.conf" ],
+    source => [ "puppet:///modules/site-puppet/client/${fqdn}/puppet.conf",
+                "puppet:///modules/site-puppet/client/puppet.conf.$operatingsystem",
+                "puppet:///modules/site-puppet/client/puppet.conf",
+                "puppet:///modules/puppet/client/puppet.conf.$operatingsystem",
+                "puppet:///modules/puppet/client/puppet.conf" ],
     notify => Service[puppet],
 	  # if puppetmasterd is deployed by apache2/passenger it needs to read puppet.conf 
 	  # therefore it must be readable by puppet
