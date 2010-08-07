@@ -18,8 +18,18 @@ Usage
 The module currently looks for values on different variables to adjust
 configuration of the master.
 
-Mode:
------
+Run puppet by cron:
+-------------------
+
+By default puppet runs as own daemon. However, you might want to run
+puppet by cron. To do this, you have to include `puppet::cron` instead
+of `puppet`. By default puppet will run twice an hour, spread amongst
+the half an hour depending on the host's fqdn. You can tweak that setting
+by setting $puppet_crontime
+
+
+Puppetmaster Mode:
+------------------
 
 If you want to run the puppetmaster in a non-webrick based
 mode, you can set $puppetmaster_mode either to:
@@ -52,7 +62,6 @@ $puppetmaster_checklastrun
 * any cron time: '20 10,22 * * *' to run the script at a certain time
   by cron. Default: 40 10,22 * * *
 * false: to disable check for last run
-
 
 Example:
 --------
