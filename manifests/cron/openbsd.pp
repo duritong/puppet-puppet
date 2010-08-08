@@ -5,7 +5,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
   if !$puppet_crontime {
     $puppet_crontime_interval_minute = fqdn_rand(29)
     $puppet_crontime_interval_minute2 = inline_template('<%= 30+puppet_crontime_interval_minute.to_i %>')
-    $puppet_crontime = '${puppet_crontime_interval_minute},${puppet_crontime_interval_minute2} * * * *'
+    $puppet_crontime = "${puppet_crontime_interval_minute},${puppet_crontime_interval_minute2} * * * *"
   }
 
   Openbsd::Rc_local['puppetd']{
