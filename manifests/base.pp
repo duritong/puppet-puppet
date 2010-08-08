@@ -1,11 +1,15 @@
 class puppet::base {
   if !$puppet_config { $puppet_config = '/etc/puppet/puppet.conf' }
 
+  $puppet_majorversion = regsubst($puppetversion,'^(\d+\.\d+).*$','\1')
+
   file { 'puppet_config':
     path => "$puppet_config",
     source => [ "puppet:///modules/site-puppet/client/${fqdn}/puppet.conf",
                 "puppet:///modules/site-puppet/client/puppet.conf.$operatingsystem",
                 "puppet:///modules/site-puppet/client/puppet.conf",
+                "puppet:///modules/puppet/client/${puppet_majorversion}/puppet.conf.$operatingsystem",
+                "puppet:///modules/puppet/client/${puppet_majorversion}/puppet.conf",
                 "puppet:///modules/puppet/client/puppet.conf.$operatingsystem",
                 "puppet:///modules/puppet/client/puppet.conf" ],
     notify => Service[puppet],
