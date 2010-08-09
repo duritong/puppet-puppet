@@ -1,4 +1,7 @@
 class puppet::openbsd inherits puppet::base {
+  File['puppet_config']{
+    owner => _puppet
+  }
   Service['puppet']{
     restart => '/bin/kill -HUP `/bin/cat /var/run/puppet/puppetd.pid`',
     stop => '/bin/kill `/bin/cat /var/run/puppet/puppetd.pid`',
