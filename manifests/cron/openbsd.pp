@@ -1,6 +1,7 @@
 class puppet::cron::openbsd inherits puppet::openbsd {
   include puppet::cron::base 
   if !$puppet_config { $puppet_config = '/etc/puppet/puppet.conf' }
+  if $puppet_http_compression { $puppet_http_compression_str = '--http_compression' }
 
   if !$puppet_crontime {
     $puppet_crontime_interval_minute = fqdn_rand(29)
@@ -19,7 +20,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
   }
 
   cron { 'puppetd_run':
-    command => "/usr/local/sbin/puppet agent --onetime --no-daemonize --config=$puppet_config --color false | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
+    command => "/usr/local/sbin/puppet agent --onetime --no-daemonize --config=$puppet_config --color false $puppet_http_compression_str | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
     user => 'root',
     minute => split(regsubst($puppet_crontime,'^([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+)$','\1'),','),
     hour => split(regsubst($puppet_crontime,'^([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+)$','\2'),','),
