@@ -20,7 +20,7 @@ class puppet::cron::openbsd inherits puppet::openbsd {
   }
 
   cron { 'puppetd_run':
-    command => "/usr/local/sbin/puppet agent --onetime --no-daemonize --config=$puppet_config --color false $puppet_http_compression_str | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
+    command => "/usr/local/bin/puppet agent --onetime --no-daemonize --config=$puppet_config --color false $puppet_http_compression_str | grep -E '(^err:|^alert:|^emerg:|^crit:)'",
     user => 'root',
     minute => split(regsubst($puppet_crontime,'^([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+)$','\1'),','),
     hour => split(regsubst($puppet_crontime,'^([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+) ([\d,\-,*,/,\,]+)$','\2'),','),
