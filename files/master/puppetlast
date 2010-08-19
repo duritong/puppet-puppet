@@ -9,7 +9,6 @@ require 'time'
 
 Puppet[:config] = "/etc/puppet/puppet.conf"
 Puppet.parse_config
-Puppet[:name] = "puppetmasterd"
 Puppet::Node::Facts.terminus_class = :yaml
 
 all = false
