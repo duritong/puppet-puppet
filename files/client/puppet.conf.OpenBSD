@@ -11,9 +11,6 @@
     
     templatedir=$vardir/templates
 
-    # Turn plug-in synchronization on.
-    pluginsync = true
-    pluginsource = puppet://$server/plugins
     factpath = $vardir/lib/facter
 
 [agent]
@@ -32,5 +29,7 @@
     user=_puppet
 
     report=true
+    factsync=true
+    pluginsync=true
 
     logdest=/var/log/puppet/puppet.log
