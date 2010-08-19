@@ -14,7 +14,7 @@ class puppet::puppetmaster inherits puppet {
 
 
   case $puppetmaster_checklastrun {
-    '': { $puppetmaster_checklastrun = '40 10,22 * * *'
+    '': { $puppetmaster_checklastrun = '40 10,22 * * *' }
   }
 
   if $puppetmaster_checklastrun {
