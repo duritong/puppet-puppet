@@ -29,7 +29,6 @@
     user=_puppet
 
     report=true
-    factsync=true
     pluginsync=true
 
     logdest=/var/log/puppet/puppet.log
