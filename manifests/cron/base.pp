@@ -18,14 +18,15 @@ class puppet::cron::base inherits puppet::base {
       } else {
         Service['puppet']{
           hasstatus => false,
+          pattern => 'puppetd',
+        }
+        # this works only on < 2.6
+        exec{'stop_puppet':
+          command => 'kill `cat /var/run/puppet/puppetd.pid`',
+          onlyif => 'test -f /var/run/puppet/puppetd.pid',
+          require => Service['puppet'],
         }
       }
     }
-  }
-  # this works only on < 2.6
-  exec{'stop_puppet':
-    command => 'kill `cat /var/run/puppet/puppetd.pid`',
-    onlyif => 'test -f /var/run/puppet/puppetd.pid',
-    require => Service['puppet'],
   }
 }

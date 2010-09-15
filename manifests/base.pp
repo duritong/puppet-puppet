@@ -22,6 +22,5 @@ class puppet::base {
     enable => true,
     hasstatus => true,
     hasrestart => true,
-    pattern => puppetd,
   }
 }
