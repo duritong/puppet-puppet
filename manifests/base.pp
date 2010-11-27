@@ -4,6 +4,20 @@ class puppet::base {
 
   $puppet_majorversion = regsubst($puppetversion,'^(\d+\.\d+).*$','\1')
 
+  case $puppet_cleanup_clientbucket {
+    # if not set, don't do anything
+    '': {}
+    default: { 
+      tidy { "/var/lib/puppet/clientbucket":
+        backup => false,
+        recurse => true,
+        rmdirs => true,
+        type => mtime,
+        age => "$puppet_cleanup_clientbucket";
+      }
+    }
+  }
+
   file { 'puppet_config':
     path => "$puppet_config",
     source => [ "puppet:///modules/site-puppet/client/${fqdn}/puppet.conf",
