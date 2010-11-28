@@ -1,7 +1,7 @@
 # manifests/puppetmaster/centos.pp
-
 class puppet::puppetmaster::centos inherits puppet::puppetmaster::package {
-  file{'/etc/sysconfig/puppetmaster':
+
+  file { '/etc/sysconfig/puppetmaster':
     source => [ "puppet:///modules/site-puppet/sysconfig/${fqdn}/puppetmaster",
                 "puppet:///modules/site-puppet/sysconfig/${domain}/puppetmaster",
                 "puppet:///modules/site-puppet/sysconfig/puppetmaster",

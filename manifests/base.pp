@@ -1,4 +1,5 @@
 class puppet::base {
+
   if !$puppet_config { $puppet_config = '/etc/puppet/puppet.conf' }
 
   $puppet_majorversion = regsubst($puppetversion,'^(\d+\.\d+).*$','\1')
@@ -13,11 +14,12 @@ class puppet::base {
                 "puppet:///modules/puppet/client/puppet.conf.$operatingsystem",
                 "puppet:///modules/puppet/client/puppet.conf" ],
     notify => Service[puppet],
-	  # if puppetmasterd is deployed by apache2/passenger it needs to read puppet.conf 
-	  # therefore it must be readable by puppet
+    # if puppetmasterd is deployed by apache2/passenger it needs to read puppet.conf 
+    # therefore it must be readable by puppet
     owner => puppet, group => 0, mode => 600;  
   }
-  service{'puppet':
+
+  service { 'puppet':
     ensure => running,
     enable => true,
     hasstatus => true,

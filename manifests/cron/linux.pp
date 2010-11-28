@@ -1,5 +1,6 @@
 # manifests/cron/linux.pp 
 class puppet::cron::linux inherits puppet::linux {
+
   include puppet::cron::base
   if !$puppet_config { $puppet_config = '/etc/puppet/puppet.conf' }
   if $puppet_http_compression { $puppet_http_compression_str = '--http_compression' }

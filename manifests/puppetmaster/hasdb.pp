@@ -1,4 +1,4 @@
-define puppet::puppetmaster::hasdb(
+define puppet::puppetmaster::hasdb (
   $dbtype = 'mysql',
   $dbname = 'puppet',
   $dbhost = 'localhost',
@@ -6,8 +6,8 @@ define puppet::puppetmaster::hasdb(
   $dbhostfqdn = "${fqdn}",
   $dbuser = 'puppet',
   $dbpwd = $puppet_storeconfig_password,
-  $dbconnectinghost = 'locahost'
-){
+  $dbconnectinghost = 'locahost' )
+{
 
   if !$puppet_storeconfig_password { fail("No \$puppet_storeconfig_password is set, please set it in your manifests or site.pp to add a password") }
 

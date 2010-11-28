@@ -1,5 +1,6 @@
 class puppet::puppetmaster::package::base inherits puppet::puppetmaster::package {
-  package{'puppetmaster':
+
+  package { 'puppetmaster':
     ensure => present,
   }
 

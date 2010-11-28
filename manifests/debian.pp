@@ -1,5 +1,6 @@
 class puppet::debian inherits puppet::linux {
-  file{'/etc/default/puppet':
+
+  file { '/etc/default/puppet':
     source => [ "puppet:///modules/site-puppet/client/debian/${fqdn}/puppet",
                 "puppet:///modules/site-puppet/client/debian/${domain}/puppet",
                 "puppet:///modules/site-puppet/client/debian/puppet",
@@ -12,6 +13,7 @@ class puppet::debian inherits puppet::linux {
   Service[puppet]{
     hasstatus => false,
   }
+  
   File['/etc/cron.d/puppetd.cron']{
     path => '/etc/cron.d/puppetd',
   }

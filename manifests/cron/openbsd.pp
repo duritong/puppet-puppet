@@ -1,4 +1,5 @@
 class puppet::cron::openbsd inherits puppet::openbsd {
+
   include puppet::cron::base 
   if !$puppet_config { $puppet_config = '/etc/puppet/puppet.conf' }
   if $puppet_http_compression { $puppet_http_compression_str = '--http_compression' }
