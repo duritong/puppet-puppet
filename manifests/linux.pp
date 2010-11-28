@@ -10,8 +10,13 @@ class puppet::linux inherits puppet::base {
     ensure => $facter_ensure_version,
   }
 
-  # package bc needed for cron job
-  include bc
+  if !defined(Package["bc"]) {
+    if $bc_ensure_version == '' { $bc_ensure_version = 'installed' }
+    package { 'bc':
+      ensure => $bc_ensure_version,
+    }
+  }
+
   Service['puppet']{
     require => Package[puppet],
   }
