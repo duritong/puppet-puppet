@@ -14,7 +14,7 @@ class puppet::puppetmaster inherits puppet {
 
 
   case $puppetmaster_lastruncheck_cron {
-    '',undef: { $puppetmaster_lastruncheck_cron = '40 10,22 * * *' }
+    '',undef: { $puppetmaster_lastruncheck_cron = '40 10 * * *' }
   }
 
   if $puppetmaster_lastruncheck_cron {
