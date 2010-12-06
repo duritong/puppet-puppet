@@ -82,7 +82,7 @@ module Puppet::Lastcheck::Tests::TimedOutFacts
   include Puppet::Lastcheck::Tests::Util
   def analyze_timed_out_facts
     require 'time'
-    facts_hosts.each{|host| add_failed_host(host[:hostname], "Last facts save at #{host[:timestamp]}") if Time.parse(host[:timestamp]) < (Time.now - @timeout) }
+    facts_hosts.each{|host| add_failed_host(host[:hostname], "Last facts save at #{host[:timestamp]}") if Time.parse(host[:timestamp].to_s) < (Time.now - @timeout) }
   end
 
   def setup_timed_out_facts
