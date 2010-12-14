@@ -57,10 +57,10 @@ Check last run:
 We can check on the last run state of certain clients, to check whether
 they still check in. You can do that by setting the following variables:
 
-$puppetmaster_checklastrun
+$puppetmaster_lastruncheck_cron
 
 * any cron time: '20 10,22 * * *' to run the script at a certain time
-  by cron. Default: 40 10,22 * * *
+  by cron. Default: 40 10 * * *
 * false: to disable check for last run
 
 Example:

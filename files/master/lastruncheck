@@ -1,0 +1,220 @@
+#!/usr/bin/env ruby
+require 'puppet/application'
+
+module Puppet::Lastcheck
+  module Puppet::Lastcheck::Tests
+    def self.included(klass)
+      klass.extend ClassMethods
+    end
+    def self.tests
+      @tests ||= {}
+    end
+    module ClassMethods
+      def add_test(name, options={})
+        include Puppet::Lastcheck::Tests.const_get(name.to_s.split('_').collect{|s| s.capitalize }.join(''))
+        Puppet::Lastcheck::Tests.tests[name] = options
+        attr_accessor "ignore_#{name}".to_sym
+        option("--ignore-#{name.to_s.gsub(/_/,'-')}") do
+          self.send("ignore_#{name}=", true)
+        end
+      end
+    end
+    module Util
+      def facts_hosts
+        return @facts_hosts if @facts_hosts
+        require 'puppet/indirector/facts/yaml'
+        @facts_hosts = Puppet::Node::Facts.search("*").collect do |node|
+          { :hostname => node.name, :expired => node.expired?, :timestamp => node.values[:_timestamp], :expiration => node.expiration }
+        end
+      end
+    end
+  end
+  module Puppet::Lastcheck::Reports
+    def self.included(klass)
+      klass.extend ClassMethods
+    end
+    def ordered_reports
+        @ordered_reports ||= Puppet::Lastcheck::Reports.reports.keys.sort{|a,b| Puppet::Lastcheck::Reports.reports[a][:priority] <=> Puppet::Lastcheck::Reports.reports[b][:priority] }
+    end
+
+    def self.reports
+      @reports ||= {}
+    end
+    module ClassMethods
+      def add_report(name, options={})
+        include Puppet::Lastcheck::Reports.const_get(name.to_s.split('_').collect{|s| s.capitalize }.join(''))
+        Puppet::Lastcheck::Reports.reports[name] = options
+        Puppet::Lastcheck::Reports.reports[name][:priority] ||= 100
+        attr_accessor "report_to_#{name}".to_sym
+        option("--report-to-#{name.to_s.gsub(/_/,'-')}") do
+          self.send("report_to_#{name}=", true)
+        end
+      end
+    end
+  end
+end
+
+module Puppet::Lastcheck::Tests::NoFacts
+  def analyze_no_facts
+    signed_hosts.each{|host| add_failed_host(host,"No facts available") unless facts_hosts.any?{|fhost| fhost[:hostname] == host } }
+  end
+  def setup_no_facts
+    Puppet::SSL::Host.ca_location = :only
+  end
+
+  private
+  def signed_hosts
+    ca.list
+  end
+
+  def ca
+    @ca ||= Puppet::SSL::CertificateAuthority.new
+  end
+end
+
+module Puppet::Lastcheck::Tests::ExpiredFacts
+  include Puppet::Lastcheck::Tests::Util
+  def analyze_expired_facts
+      facts_hosts.each{|host| add_failed_host(host[:hostname],"Expired at #{host[:expiration]}") if host[:expired] }
+  end
+end
+module Puppet::Lastcheck::Tests::TimedOutFacts
+  include Puppet::Lastcheck::Tests::Util
+  def analyze_timed_out_facts
+    require 'time'
+    facts_hosts.each{|host| add_failed_host(host[:hostname], "Last facts save at #{host[:timestamp]}") if Time.parse(host[:timestamp].to_s) < (Time.now - @timeout) }
+  end
+
+  def setup_timed_out_facts
+    if @timeout
+      ignore_expired_facts ||= true
+    end
+  end
+end
+module Puppet::Lastcheck::Tests::Storedconfigs
+  def analyze_storedconfigs
+    storedconfigs_hosts.each do |host|
+      if !facts_hosts.any?{|fact_host| fact_host[:hostname] == host.name }
+        add_failed_host(host.name, "In storedconfigs but no facts available!")
+      elsif host.last_compile.nil? || host.last_compile < (Time.now - @timeout)
+        add_failed_host(host.name, "Last compile time in storedconfigs at #{host.last_compile}")
+      end
+    end
+  end
+
+  private
+  def storedconfigs_hosts
+    return @storedconfigs_hosts if @storedconfigs_hosts
+    Puppet::Rails.connect
+    @storedconfigs_hosts = Puppet::Rails::Host.all
+  end
+end
+module Puppet::Lastcheck::Reports::Console
+  def deliver_report_to_console(failing_hosts)
+    unless failing_hosts.empty?
+      puts 'The following hosts are out of date:'
+      puts '------------------------------------'
+      host_length = 0
+      failing_hosts.keys.each{|host| host_length = host.length if host.length > host_length }
+      failing_hosts.keys.each{ |host| puts "#{pretty_puts(host,host_length)} - Reason: #{failing_hosts[host][:reason]}" }
+      1
+    else
+      0
+    end
+  end
+end
+module Puppet::Lastcheck::Reports::Nagios
+  def deliver_report_to_nagios(failing_hosts)
+    unless failing_hosts.empty?
+      puts "PUPPETLAST CRITICAL: #{failing_hosts.size} outdated hosts: #{failing_hosts.keys.join(',')}"
+      2
+    else
+      puts "PUPPETLAST OK: No outdated hosts"
+      0
+    end
+  end
+end
+#
+# = Synopsis
+#
+# Verifiying your puppet runs. Check different places to verify
+# whether your clients actually still runs successfully.
+# Also checks for left overs of legacy hosts.
+#
+# = Usage
+#
+#  puppet lastcheck [-h|--help] 
+class Puppet::Application::Lastcheck < Puppet::Application
+
+  should_parse_config
+  run_mode :master
+
+  include Puppet::Lastcheck::Tests
+  add_test :no_facts
+  add_test :expired_facts, :ignore_by_default => true
+  add_test :timed_out_facts
+  add_test :storedconfigs
+
+  include Puppet::Lastcheck::Reports
+  add_report :console, :priority => 50
+  add_report :nagios
+
+  option("--timeout TIMEOUT") do |v|
+    @timeout = v.to_i
+  end
+
+  option("--ignore-hosts HOSTS") do |v|
+    @ignore_hosts = v.split(',')
+  end
+
+  def main
+
+    Puppet::Lastcheck::Tests.tests.keys.each do |test|
+      self.send("analyze_#{test}") unless self.send("ignore_#{test}")
+    end
+    exitcode = 0
+    ordered_reports.each do |report|
+      if self.send("report_to_#{report}")
+        tmpexitcode = self.send("deliver_report_to_#{report}",@failing_hosts)
+        exitcode = tmpexitcode unless exitcode > 0
+      end
+    end
+    exit(exitcode)
+  end
+
+  def setup
+    exit(Puppet.settings.print_configs ? 0 : 1) if Puppet.settings.print_configs?
+
+    Puppet::Util::Log.newdestination :console
+    Puppet::Node::Facts.terminus_class = :yaml
+
+    Puppet::Lastcheck::Tests.tests.keys.each do |test|
+      self.send("ignore_#{test}=", Puppet::Lastcheck::Tests.tests[test][:ignore_by_default]||false) unless self.send("ignore_#{test}")
+      self.send("setup_#{test}") if self.respond_to?("setup_#{test}") and !self.send("ignore_#{test}")
+    end
+    report = nil
+    report_activated = false
+    ordered_reports.each do |report|
+      report_activated ||= self.send("report_to_#{report}")
+    end
+    self.report_to_console = true unless report_activated
+
+    @ignore_hosts = [] unless @ignore_hosts
+    @failing_hosts = {}
+    unless @timeout 
+      @timeout = Puppet[:runinterval]
+    end
+  end
+
+  private
+
+  def add_failed_host(hostname,reason)
+    @failing_hosts[hostname] = { :reason => reason } unless (@failing_hosts[hostname] || @ignore_hosts.include?(hostname))
+  end
+
+  def pretty_puts(str,length)
+    sprintf("%0-#{length}s",str)
+  end
+end  
+
+Puppet::Application.find('lastcheck').new.run

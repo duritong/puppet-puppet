@@ -13,11 +13,11 @@ class puppet::puppetmaster inherits puppet {
   include puppet::puppetmaster::base
 
 
-  case $puppetmaster_checklastrun {
-    '': { $puppetmaster_checklastrun = '40 10,22 * * *' }
+  case $puppetmaster_lastruncheck_cron {
+    '',undef: { $puppetmaster_lastruncheck_cron = '40 10 * * *' }
   }
 
-  if $puppetmaster_checklastrun {
+  if $puppetmaster_lastruncheck_cron {
     include puppet::puppetmaster::checklastrun
   } else {
     include puppet::puppetmaster::checklastrun::disable
