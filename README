@@ -6,12 +6,6 @@ files, under:
  site-puppet/files/master/fileserver.conf
  site-puppet/files/master/puppet.conf
 
-those files in this module are just examples.
-
-Depends on Modules
-------------------
-- bc
-
 Usage
 =====
 
@@ -21,11 +15,19 @@ configuration of the master.
 Run puppet by cron:
 -------------------
 
-By default puppet runs as own daemon. However, you might want to run
-puppet by cron. To do this, you have to include `puppet::cron` instead
-of `puppet`. By default puppet will run twice an hour, spread amongst
-the half an hour depending on the host's fqdn. You can tweak that setting
-by setting $puppet_crontime
+By default puppet runs as its own daemon. However, you might want to run puppet
+by cron. To do this, you have to include `puppet::cron` instead of `puppet`. If
+you include puppet::cron then by default puppet will run twice an hour, spread
+amongst the half an hour depending on the host's fqdn. If you wish to change
+that interval, you can tweak $puppet_crontime (NOTE: this variable only operates
+on the minute cron field).
+
+Clientbucket cleanup:
+---------------------
+
+The individual node client buckets aren't cleaned up automatically, unless you
+specify $puppet_cleanup_clientbucket = 'X', where X is the number of days you
+want to keep clientbucket files for.
 
 
 Puppetmaster Mode:
@@ -34,7 +36,9 @@ Puppetmaster Mode:
 If you want to run the puppetmaster in a non-webrick based
 mode, you can set $puppetmaster_mode either to:
 
-* passenger, run puppetmaster as a passenger application
+* passenger, run puppetmaster as a passenger application, you will need the
+  passenger module to take advantage of this
+
 * cluster, run puppetmaster as a mongrel based cluster
 
 In both cases you have to setup the appropriate frontends
@@ -63,6 +67,15 @@ $puppetmaster_lastruncheck_cron
   by cron. Default: 40 10 * * *
 * false: to disable check for last run
 
+You will need the cron module to take advantage of this functionality. 
+
+Stored configs:
+---------------
+
+If you want to use storedconfigs on your puppetmaster, then you will want to
+also be using the mysql module, and then you will need to "include
+puppet::puppetmaster::storeconfigs".
+
 Example:
 --------
 
@@ -77,4 +90,3 @@ in your site.pp, i.e. :
     $puppet_storeconfig_password="..."
     include puppet::puppetmaster::storeconfigs
 
-...tbc...
