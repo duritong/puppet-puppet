@@ -42,4 +42,8 @@ class puppet::puppetmaster inherits puppet {
   if $use_shorewall {
     include shorewall::rules::puppet::master
   }
+
+  if $use_munin {
+    include puppet::puppetmaster::munin
+  }
 }

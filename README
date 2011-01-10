@@ -45,6 +45,15 @@ In both cases you have to setup the appropriate frontends
 (apache vhost configuration/nginx vhost configuration) on
 your own.
 
+Munin
+-----
+
+If you are using munin, and have the puppet munin module installed, you can set
+the variable $use_munin = true to have graphs setup for you. The graphs that
+will be setup track memory usage by the running puppetmasters; track the average
+compile time of clients; and if you are using postgresql/mysql then a graph to
+monitor resource counts.
+
 Reports cleanup:
 ---------------
 

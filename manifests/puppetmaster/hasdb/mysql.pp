@@ -23,8 +23,10 @@ define puppet::puppetmaster::hasdb::mysql (
     tag => "mysql_${dbhostfqdn}",
   }
 
-  munin::plugin::deploy { 'puppetresources':
-    source => "puppet/munin/puppetresources.mysql",
-    config => "env.mysqlopts --user=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",
+  if $use_munin {
+    munin::plugin::deploy { 'puppetresources':
+      source => "puppet/munin/puppetresources.mysql",
+      config => "env.mysqlopts --user=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",
+    }
   }
 }
