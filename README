@@ -39,11 +39,11 @@ mode, you can set $puppetmaster_mode either to:
 * passenger, run puppetmaster as a passenger application, you will need the
   passenger module to take advantage of this
 
-* cluster, run puppetmaster as a mongrel based cluster
+* cluster, run puppetmaster as a mongrel based cluster, you will need the
+  nginx and mongrel modules to take advantage of this
 
-In both cases you have to setup the appropriate frontends
-(apache vhost configuration/nginx vhost configuration) on
-your own.
+In both cases you have to setup the appropriate frontends (apache vhost
+configuration/nginx vhost configuration) on your own.
 
 Munin
 -----
