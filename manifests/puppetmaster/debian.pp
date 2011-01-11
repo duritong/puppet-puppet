@@ -1,7 +1,11 @@
 class puppet::puppetmaster::debian inherits puppet::puppetmaster::package {
 
   if $puppetmaster_mode != 'passenger' {
-    Service['puppetmaster'] { hasstatus => true, hasrestart => true }
+    case $lsbdistcodename {
+      squeeze,sid: {
+        Service['puppetmaster'] { hasstatus => true, hasrestart => true }
+      }
+    }
   }
 
   file { '/etc/default/puppetmaster':

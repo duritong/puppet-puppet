@@ -8,8 +8,22 @@ class puppet::debian inherits puppet::linux {
     notify => Service[puppet],
     owner => root, group => 0, mode => 0644;
   }
-  
-  File['/etc/cron.d/puppetd.cron']{
-    path => '/etc/cron.d/puppetd',
+
+  case $lsbdistcodename {
+    squeeze,sid: {
+      $real_puppet_hasstatus = true
+    }
+    default: {
+      $real_puppet_hasstatus = false
+    }
+    
+    Service[puppet]{
+      hasstatus => $real_puppet_hasstatus,
+    }
+    
+    File['/etc/cron.d/puppetd.cron']{
+      path => '/etc/cron.d/puppetd',
+    }
   }
 }
+
