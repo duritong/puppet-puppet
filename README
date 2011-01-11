@@ -85,22 +85,44 @@ You will need the cron module to take advantage of this functionality.
 Stored configs:
 ---------------
 
-If you want to use storedconfigs on your puppetmaster, then you will need the
-mysql module, the rails module and you will need to set
-$puppetmaster_storeconfigs = true
+If you want to use storedconfigs on your puppetmaster, there are some
+pre-requisite modules: mysql, rails. In your puppetmaster node definition you
+will need to set $mysql_rootpw to the mysql root password,
+$puppet_storeconfig_password to the puppet database password, and then set
+$puppetmaster_storeconfigs = true to enable stored configs. 
 
+Then you will need to either put in your node definition, or in
+site-puppet/manifests/init.pp puppet::puppetmaster::hasdb to setup the database
+with the right parameters. This will setup your storeconfigs database, adding to
+the database the correct user, the correct grant permissions, and also setup
+a munin graph, if you have $use_munin = true
+
+Currently, only mysql is supported. See manifests/puppetmaster/hasdb.pp for the
+define variables you can set.
 
 Example:
 --------
 
-in your site.pp, i.e. :
+in your site.pp:
 
-    $puppet_crontime = "0,12 * * * *"
-    include puppet::cron
-    
-    $puppetmaster_mode = 'passenger'
-    include puppet::puppetmaster
-    
-    $puppet_storeconfig_password="..."
-    include puppet::puppetmaster::storeconfigs
+node puppetmaster {
+  $mysql_rootpw = "foo"
+  $puppet_storeconfig_password = "bar"
+  $puppetmaster_storeconfigs = true
+  $use_munin = true
+  $puppetmaster_mode = 'passenger'
+  $puppet_crontime = "0,12 * * * *"
+  include site-puppet::master
+  include puppet::cron
+  include puppet::puppetmaster
+...
+
+in your site-puppet/manifests/master.pp you could include something like:
+
+class site-puppet::master {
+      ...
+      puppet::puppetmaster::hasdb { "puppet":
+        dbname => 'puppetmaster',
+	dbuser => 'puppet'
+      }
 
