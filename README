@@ -29,6 +29,10 @@ The individual node client buckets aren't cleaned up automatically, unless you
 specify $puppet_cleanup_clientbucket = 'X', where X is the number of days you
 want to keep clientbucket files for.
 
+Use http compression
+--------------------
+
+To enable http compression on the clients, set $puppet_http_compression = true
 
 Puppetmaster Mode:
 ------------------
@@ -81,9 +85,10 @@ You will need the cron module to take advantage of this functionality.
 Stored configs:
 ---------------
 
-If you want to use storedconfigs on your puppetmaster, then you will want to
-also be using the mysql module, and then you will need to "include
-puppet::puppetmaster::storeconfigs".
+If you want to use storedconfigs on your puppetmaster, then you will need the
+mysql module, the rails module and you will need to set
+$puppetmaster_storeconfigs = true
+
 
 Example:
 --------
