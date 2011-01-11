@@ -10,13 +10,6 @@ class puppet::linux inherits puppet::base {
     ensure => $facter_ensure_version,
   }
 
-  if !defined(Package["bc"]) {
-    if $bc_ensure_version == '' { $bc_ensure_version = 'installed' }
-    package { 'bc':
-      ensure => $bc_ensure_version,
-    }
-  }
-
   Service['puppet']{
     require => Package[puppet],
   }

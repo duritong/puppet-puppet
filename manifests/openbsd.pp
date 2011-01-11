@@ -19,12 +19,12 @@ class puppet::openbsd inherits puppet::base {
   
   cron {
     'puppetd_check':
-      command => '/bin/ps ax | /usr/bin/grep -v grep | /usr/bin/grep -q "puppet agent" || (sleep `echo $RANDOM/2000*60 | bc` && /usr/local/bin/puppet agent)',
+      command => '/bin/ps ax | /usr/bin/grep -v grep | /usr/bin/grep -q "puppet agent" || (sleep $(($RANDOM/2000*60)) && /usr/local/bin/puppet agent)',
       user => root,
       minute => 0;
 
     'puppetd_restart':
-      command => 'sleep `echo $RANDOM/2000*60 | bc` && /bin/kill `/bin/cat /var/run/puppet/agent.pid`; /usr/local/bin/puppet agent',
+      command => 'sleep $((echo $RANDOM/2000*60)) && /bin/kill `/bin/cat /var/run/puppet/agent.pid`; /usr/local/bin/puppet agent',
       minute => 0,
       hour => 22,
       monthday => '*/2',
