@@ -1,7 +1,7 @@
 # manifests/cron.pp
 
 class puppet::cron inherits puppet {
-  case $kernel {
+  case $operatingsystem {
     linux: { include puppet::cron::linux }
     debian: { include puppet::cron::debian }
     openbsd: { include puppet::cron::openbsd }
