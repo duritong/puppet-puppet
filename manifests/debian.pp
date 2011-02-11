@@ -21,10 +21,6 @@ class puppet::debian inherits puppet::linux {
   Service[puppet]{
     hasstatus => $real_puppet_hasstatus,
   }
-  
-  File['/etc/cron.d/puppetd.cron']{
-    path => '/etc/cron.d/puppetd',
-  }
 }
 
 

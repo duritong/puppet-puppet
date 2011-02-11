@@ -14,7 +14,11 @@ class puppet::linux inherits puppet::base {
     require => Package[puppet],
   }
 
-  file { '/etc/cron.d/puppetd.cron':
+  # this is to clean up an invalid cron name from a previous version
+  # at some point, this should be removed
+  file { '/etc/cron.d/puppetd.cron': ensure => absent }
+  
+  file { '/etc/cron.d/puppetd':
     source => [ "puppet:///modules/site-puppet/cron.d/puppetd",
                 "puppet:///modules/puppet/cron.d/puppetd.${operatingsystem}",
                 "puppet:///modules/puppet/cron.d/puppetd" ],
