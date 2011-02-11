@@ -14,7 +14,7 @@ class puppet::linux inherits puppet::base {
     require => Package[puppet],
   }
   
-  file { '/etc/cron.d/puppetd':
+  file { '/etc/cron.d/puppetd.cron':
     source => [ "puppet:///modules/site-puppet/cron.d/puppetd",
                 "puppet:///modules/puppet/cron.d/puppetd.${operatingsystem}",
                 "puppet:///modules/puppet/cron.d/puppetd" ],
