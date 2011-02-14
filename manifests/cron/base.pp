@@ -6,7 +6,7 @@ class puppet::cron::base inherits puppet::base {
   }
 
   case $operatingsystem {
-    openbsd: {
+    debian,openbsd,ubuntu: {
       #it's already disabled
     }
     default: {
