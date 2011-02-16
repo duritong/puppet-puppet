@@ -9,11 +9,6 @@ class puppet::debian inherits puppet::linux {
     owner => root, group => 0, mode => 0644;
   }  
 
-  # there is really no status cmd for it
-  Service[puppet]{
-    hasstatus => false,
-  }
-
   case $lsbdistcodename {
     squeeze,sid: {
       $real_puppet_hasstatus = true
