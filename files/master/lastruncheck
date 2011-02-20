@@ -96,7 +96,9 @@ module Puppet::Lastcheck::Tests::Storedconfigs
     storedconfigs_hosts.each do |host|
       if !facts_hosts.any?{|fact_host| fact_host[:hostname] == host.name }
         add_failed_host(host.name, "In storedconfigs but no facts available!")
-      elsif host.last_compile.nil? || host.last_compile < (Time.now - @timeout)
+      elsif host.last_compile.nil?
+        add_failed_host(host.name, "No entry in storedconfigs")
+      elsif host.last_compile < (Time.now - @timeout)
         add_failed_host(host.name, "Last compile time in storedconfigs at #{host.last_compile}")
       end
     end
