@@ -21,6 +21,11 @@ class puppet::debian inherits puppet::linux {
   Service[puppet]{
     hasstatus => $real_puppet_hasstatus,
   }
+
+  if !$puppet_ensure_version { $puppet_ensure_version = 'installed' }
+  package{ 'puppet-common':
+    ensure => $puppet_ensure_version,
+  }
 }
 
 
