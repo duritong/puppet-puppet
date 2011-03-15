@@ -14,7 +14,7 @@ class puppet::cron::linux inherits puppet::linux {
 
   File['/etc/cron.d/puppetd.cron']{
     source => undef,
-    content => "# run puppet\n$puppet_crontime root /usr/sbin/puppetd --onetime --no-daemonize --config=$puppet_config --color false $puppet_http_compression_str | grep -E '(^err:|^alert:|^emerg:|^crit:)'\n",
+    content => "# run puppet\n$puppet_crontime root /usr/sbin/puppetd --onetime --no-daemonize --config=$puppet_config --color false $puppet_http_compression_str | grep -E '(^err:|^alert:|^emerg:|^crit:)'; if [ $? -eq 1 ]; then exit 0; fi\n",
     before => Service['puppet'],
   }
 }
