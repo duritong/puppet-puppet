@@ -28,7 +28,7 @@ class puppet::debian inherits puppet::linux {
   }
 
   Package['puppet']{
-    require => Package['puppet-common'];
+    require => Package['puppet-common']
   }       
 }
 
