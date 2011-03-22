@@ -1,12 +1,12 @@
 class puppet::linux inherits puppet::base {
 
   if !$puppet_ensure_version { $puppet_ensure_version = 'installed' }
-  package{ 'puppet':
+  package { 'puppet':
     ensure => $puppet_ensure_version,
   }
 
   if !$facter_ensure_version { $facter_ensure_version = 'installed' }
-  package{ 'facter':
+  package { 'facter':
     ensure => $facter_ensure_version,
   }
 
