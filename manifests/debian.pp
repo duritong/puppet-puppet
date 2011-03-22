@@ -26,6 +26,10 @@ class puppet::debian inherits puppet::linux {
   package{ 'puppet-common':
     ensure => $puppet_ensure_version,
   }
+
+  Package['puppet']{
+    require => Package['puppet-common'];
+  }       
 }
 
 
