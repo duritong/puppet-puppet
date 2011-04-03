@@ -24,7 +24,7 @@ module Puppet::Lastcheck
         return @facts_hosts if @facts_hosts
         require 'puppet/indirector/facts/yaml'
         @facts_hosts = Puppet::Node::Facts.search("*").collect do |fqdn|
-          if node = Puppet::Node::Facts.search(fqdn)
+          if node = Puppet::Node::Facts.find(fqdn)
             { :hostname => node.name, :expired => node.expired?, :timestamp => node.values[:_timestamp], :expiration => node.expiration }
           end
         end.compact
