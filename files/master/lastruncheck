@@ -189,7 +189,7 @@ class Puppet::Application::Lastcheck < Puppet::Application
   def setup
     exit(Puppet.settings.print_configs ? 0 : 1) if Puppet.settings.print_configs?
 
-    Puppet::Util::Log.newdestination :console
+    #Puppet::Util::Log.newdestination :console
     Puppet::Node::Facts.terminus_class = :yaml
 
     Puppet::Lastcheck::Tests.tests.keys.each do |test|
