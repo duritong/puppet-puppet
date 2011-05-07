@@ -23,9 +23,11 @@ module Puppet::Lastcheck
       def facts_hosts
         return @facts_hosts if @facts_hosts
         require 'puppet/indirector/facts/yaml'
-        @facts_hosts = Puppet::Node::Facts.search("*").collect do |node|
-          { :hostname => node.name, :expired => node.expired?, :timestamp => node.values[:_timestamp], :expiration => node.expiration }
-        end
+        @facts_hosts = Puppet::Node::Facts.search("*").collect do |fqdn|
+          if node = Puppet::Node::Facts.find(fqdn)
+            { :hostname => node.name, :expired => node.expired?, :timestamp => node.values[:_timestamp], :expiration => node.expiration }
+          end
+        end.compact
       end
     end
   end
@@ -96,7 +98,9 @@ module Puppet::Lastcheck::Tests::Storedconfigs
     storedconfigs_hosts.each do |host|
       if !facts_hosts.any?{|fact_host| fact_host[:hostname] == host.name }
         add_failed_host(host.name, "In storedconfigs but no facts available!")
-      elsif host.last_compile.nil? || host.last_compile < (Time.now - @timeout)
+      elsif host.last_compile.nil?
+        add_failed_host(host.name, "No entry in storedconfigs")
+      elsif host.last_compile < (Time.now - @timeout)
         add_failed_host(host.name, "Last compile time in storedconfigs at #{host.last_compile}")
       end
     end
@@ -185,7 +189,7 @@ class Puppet::Application::Lastcheck < Puppet::Application
   def setup
     exit(Puppet.settings.print_configs ? 0 : 1) if Puppet.settings.print_configs?
 
-    Puppet::Util::Log.newdestination :console
+    #Puppet::Util::Log.newdestination :console
     Puppet::Node::Facts.terminus_class = :yaml
 
     Puppet::Lastcheck::Tests.tests.keys.each do |test|
