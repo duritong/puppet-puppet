@@ -20,7 +20,7 @@ class puppet::puppetmaster::base inherits puppet::base {
 
 
   if $puppetmaster_mode == 'passenger' {
-    include puppet::puppetmaster::pasenger
+    include puppet::puppetmaster::passenger
     File[$puppet_fileserverconfig]{
       notify => Exec['notify_passenger_puppetmaster'],
     }

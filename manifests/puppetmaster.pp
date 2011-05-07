@@ -24,7 +24,7 @@ class puppet::puppetmaster inherits puppet {
   }
 
   if $puppetmaster_mode == 'passenger' {
-    include puppet::puppetmaster::pasenger
+    include puppet::puppetmaster::passenger
   } elsif $puppetmaster_mode == 'cluster' {
     include puppet::puppetmaster::cluster
   }
