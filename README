@@ -68,6 +68,9 @@ values:
 * 'X', where X is the amount of days you want to keep reports for
 * false, to disable reports cleanup
 
+If your reports are in a different place than the default, you can set
+$puppetmaster_reports dir to adjust their location.
+
 Check last run:
 ---------------
 
