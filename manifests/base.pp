@@ -6,7 +6,7 @@ class puppet::base {
 
   case $puppet_cleanup_clientbucket {
     # if not set, don't do anything
-    '': {}
+    '',undef: {}
     default: { 
       tidy { "/var/lib/puppet/clientbucket":
         backup => false,
