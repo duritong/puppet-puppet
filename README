@@ -62,20 +62,11 @@ Reports cleanup:
 ---------------
 
 By default we clean up reports older than 30 days. If you want to change
-that, you can subclass puppet::puppetmaster and overwrite the included class and
-include that one instead:
+that, you can set $puppetmaster_cleanup_reports to one of the following
+values:
 
-class mypuppetmaster inherits puppet::master {
-  Class['puppet::puppetmaster::cleanup_reports']{
-    cleanup_older_than => 'absent'
-  }
-}
-
-Where 'absent' means not to cleanup records and X any other amount of days.
-
-You can also adjust the locations of the reports to your needs, by setting the param
-`reports_dir` to something different.
-
+* 'X', where X is the amount of days you want to keep reports for
+* false, to disable reports cleanup
 
 Check last run:
 ---------------
