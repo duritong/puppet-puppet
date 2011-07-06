@@ -29,14 +29,8 @@ class puppet::puppetmaster inherits puppet {
     include puppet::puppetmaster::cluster
   }
 
-  case $puppetmaster_cleanup_reports {
-    '': { $puppetmaster_cleanup_reports = '30' }
-  }
-
-  if $puppetmaster_cleanup_reports {
-    include puppet::puppetmaster::cleanup_reports
-  } else {
-    include puppet::puppetmaster::cleanup_reports::disable
+  class{'puppet::puppetmaster::cleanup_reports':
+    cleanup_older_than => '30',
   }
 
   if $use_shorewall {
