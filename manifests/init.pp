@@ -12,16 +12,22 @@
 # Marcel Härry haerry+puppet(at)puzzle.ch
 # Simon Josi josi+puppet(at)puzzle.ch
 #
-# This program is free software; you can redistribute 
-# it and/or modify it under the terms of the GNU 
-# General Public License version 3 as published by 
+# This program is free software; you can redistribute
+# it and/or modify it under the terms of the GNU
+# General Public License version 3 as published by
 # the Free Software Foundation.
 #
 
-class puppet {
-  case $kernel {
-    linux: { 
-      case $operatingsystem {
+class puppet(
+  $config = hiera('puppet_config','/etc/puppet/puppet.conf'),
+  $http_compression = hiera('puppet_http_compression',false),
+  $cleanup_clientbucket = hiera('puppet_cleanup_clientbucket',false),
+  $ensure_version = hiera('puppet_ensure_version', 'installed'),
+  $ensure_facter_version = hiera('puppet_ensure_facter_version', 'installed'),
+) {
+  case $::kernel {
+    linux: {
+      case $::operatingsystem {
         gentoo: { include puppet::gentoo }
         centos: { include puppet::centos }
         debian,ubuntu: { include puppet::debian }
@@ -32,7 +38,7 @@ class puppet {
     default: { include puppet::base }
   }
 
-  if $use_shorewall {
+  if hiera('use_shorewall',false) {
     include shorewall::rules::out::puppet
   }
 }

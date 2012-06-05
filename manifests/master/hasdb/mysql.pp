@@ -1,8 +1,8 @@
 # don't use this define use the general interface
-define puppet::puppetmaster::hasdb::mysql (
+define puppet::master::hasdb::mysql (
   $dbname = 'puppet',
   $dbhost = 'localhost',
-  $dbhostfqdn = "${fqdn}",
+  $dbhostfqdn = $::fqdn,
   $dbuser = 'puppet',
   $dbpwd,
   $dbconnectinghost = 'localhost' )
@@ -23,7 +23,7 @@ define puppet::puppetmaster::hasdb::mysql (
     tag => "mysql_${dbhostfqdn}",
   }
 
-  if $use_munin {
+  if hiera('use_munin',false) {
     munin::plugin::deploy { 'puppetresources':
       source => "puppet/munin/puppetresources.mysql",
       config => "env.mysqlopts --user=$dbuser --password=$dbpwd -h $dbhost\nenv.puppetdb $dbname",

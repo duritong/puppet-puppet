@@ -1,10 +1,10 @@
 Puppet-Module for configuring Puppet itself, both the master and the clients
 ============================================================================
 
-Use a seperate local module called "site-puppet", where you place your customized 
+Use a seperate local module called "site_puppet", where you place your customized 
 files, under:
- site-puppet/files/master/fileserver.conf
- site-puppet/files/master/puppet.conf
+ site_puppet/files/master/fileserver.conf
+ site_puppet/files/master/puppet.conf
 
 Usage
 =====
@@ -19,14 +19,14 @@ By default puppet runs as its own daemon. However, you might want to run puppet
 by cron. To do this, you have to include `puppet::cron` instead of `puppet`. If
 you include puppet::cron then by default puppet will run twice an hour, spread
 amongst the half an hour depending on the host's fqdn. If you wish to change
-that interval, you can tweak $puppet_crontime (NOTE: this variable only operates
+that interval, you can tweak $crontime (NOTE: this variable only operates
 on the minute cron field).
 
 Clientbucket cleanup:
 ---------------------
 
 The individual node client buckets aren't cleaned up automatically, unless you
-specify $puppet_cleanup_clientbucket = 'X', where X is the number of days you
+specify cleanup_clientbucket = 'X', where X is the number of days you
 want to keep clientbucket files for.
 
 Use http compression
@@ -95,7 +95,7 @@ $puppet_storeconfig_password to the puppet database password, and then set
 $puppetmaster_storeconfigs = true to enable stored configs. 
 
 Then you will need to either put in your node definition, or in
-site-puppet/manifests/init.pp puppet::puppetmaster::hasdb to setup the database
+site_puppet/manifests/init.pp puppet::puppetmaster::hasdb to setup the database
 with the right parameters. This will setup your storeconfigs database, adding to
 the database the correct user, the correct grant permissions, and also setup
 a munin graph, if you have $use_munin = true
@@ -115,14 +115,14 @@ node puppetmaster {
   $use_munin = true
   $puppetmaster_mode = 'passenger'
   $puppet_crontime = "0,12 * * * *"
-  include site-puppet::master
+  include site_puppet::master
   include puppet::cron
   include puppet::puppetmaster
 ...
 
-in your site-puppet/manifests/master.pp you could include something like:
+in your site_puppet/manifests/master.pp you could include something like:
 
-class site-puppet::master {
+class site_puppet::master {
       ...
       puppet::puppetmaster::hasdb { "puppet":
         dbname => 'puppetmaster',

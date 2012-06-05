@@ -1,6 +1,6 @@
-class puppet::puppetmaster::linux inherits puppet::linux {
-  
-  if $puppetmaster_mode == 'passenger' {
+class puppet::master::linux inherits puppet::linux {
+
+  if $puppet::master::mode == 'passenger' {
     exec { 'notify_passenger_puppetmaster':
       refreshonly => true,
       command => 'touch /etc/puppet/rack/tmp/restart.txt && sleep 1 && rm /etc/puppet/rack/tmp/restart.txt',

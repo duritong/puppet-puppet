@@ -1,4 +1,4 @@
-class puppet::puppetmaster::munin {
+class puppet::master::munin {
 
   munin::plugin::deploy {
     [ 'puppetmaster_memory', 'puppet_clients' ]:

@@ -1,4 +1,4 @@
-class puppet::puppetmaster::package::debian inherits puppet::puppetmaster::package::base {
+class puppet::master::package::debian inherits puppet::master::package::base {
 
   package { 'puppetmaster-common':
     ensure => present,

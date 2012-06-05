@@ -1,4 +1,4 @@
-class puppet::puppetmaster::package::centos inherits puppet::puppetmaster::package::base {
+class puppet::master::package::centos inherits puppet::master::package::base {
 
   Package['puppetmaster']{
     name => 'puppet-server',
