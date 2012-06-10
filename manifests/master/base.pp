@@ -7,6 +7,12 @@ class puppet::master::base inherits puppet::base {
     owner => root, group => puppet, mode => 640;
   }
 
+  File['puppet_config']{
+    source => [ "puppet:///modules/site_puppet/master/${::fqdn}/puppet.conf",
+                "puppet:///modules/site_puppet/master/puppet.conf",
+                "puppet:///modules/puppet/master/puppet.conf" ]
+  }
+
   if $puppet::master::storeconfigs {
     include puppet::master::storeconfigs
   }
