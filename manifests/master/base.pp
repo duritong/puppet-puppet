@@ -1,6 +1,6 @@
 class puppet::master::base inherits puppet::base {
 
-  file { $puppet::master::fileserverconfig:
+  file { $puppet::master::fileserver:
     source => [ "puppet:///modules/site_puppet/master/${::fqdn}/fileserver.conf",
                 "puppet:///modules/site_puppet/master/fileserver.conf",
                 "puppet:///modules/puppet/master/fileserver.conf" ],
@@ -14,14 +14,14 @@ class puppet::master::base inherits puppet::base {
 
   if $puppet::master::mode == 'passenger' {
     include puppet::master::passenger
-    File[$puppet::master::fileserverconfig]{
+    File[$puppet::master::fileserver]{
       notify => Exec['notify_passenger_puppetmaster'],
     }
     File[puppet_config]{
       notify => Exec['notify_passenger_puppetmaster'],
     }
   } else {
-    File[$puppet::master::fileserverconfig]{
+    File[$puppet::master::fileserver]{
       notify => Service[puppetmaster],
     }
     File[puppet_config]{

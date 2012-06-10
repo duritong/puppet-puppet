@@ -1,6 +1,7 @@
 # manifests/puppetmaster.pp
 class puppet::master(
   $config = hiera('puppet_config','/etc/puppet/puppet.conf'),
+  $fileserver = hiera('puppet_fileserver_config','/etc/puppet/fileserver.conf'),
   $http_compression = hiera('puppet_http_compression',false),
   $cleanup_clientbucket = hiera('puppet_cleanup_clientbucket',false),
   $cron_time = hiera('puppet_cron_time',false),
