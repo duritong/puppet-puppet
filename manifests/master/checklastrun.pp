@@ -18,7 +18,7 @@ class puppet::master::checklastrun {
       owner => root, group => 0, mode => 0700;
 
     '/etc/cron.d/puppetlast.cron':
-      content => "${puppetmaster_lastruncheck_cron} root /usr/local/sbin/puppetlast ${puppet_lastruncheck_timeout_str} ${puppet_lastruncheck_ignorehosts_str} ${puppet::master::lastruncheck_additionaloptions}\n",
+      content => "${puppet::master::lastruncheck_cron} root /usr/local/sbin/puppetlast ${puppet_lastruncheck_timeout_str} ${puppet_lastruncheck_ignorehosts_str} ${puppet::master::lastruncheck_additionaloptions}\n",
       require => File["/usr/local/sbin/puppetlast"],
       owner => root, group => 0, mode => 0644,
   }
