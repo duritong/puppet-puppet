@@ -1,5 +1,6 @@
 class puppet::cron(
   $cron_time,
+  $stop_service = hiera('puppet_stop_service',true),
   $config = hiera('puppet_config','/etc/puppet/puppet.conf'),
   $http_compression = hiera('puppet_http_compression',false),
   $cleanup_clientbucket = hiera('puppet_cleanup_clientbucket',false),

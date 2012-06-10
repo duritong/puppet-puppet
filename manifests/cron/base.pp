@@ -25,7 +25,7 @@ class puppet::cron::base inherits puppet::base {
     enable => false,
   }
 
-  if $stop_service == true {
+  if $puppet::cron::stop_service == true {
     $puppet_majorversion = regsubst($::puppetversion,'^(\d+\.\d+).*$','\1')
     if $puppet_majorversion == '2.6' {
       Service['puppet']{
