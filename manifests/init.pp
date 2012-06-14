@@ -19,12 +19,16 @@
 #
 
 class puppet(
-  $config = hiera('puppet_config','/etc/puppet/puppet.conf'),
-  $http_compression = hiera('puppet_http_compression',false),
-  $cleanup_clientbucket = hiera('puppet_cleanup_clientbucket',false),
-  $ensure_version = hiera('puppet_ensure_version', 'installed'),
-  $ensure_facter_version = hiera('puppet_ensure_facter_version', 'installed'),
-) {
+  $config = '/etc/puppet/puppet.conf',
+  $http_compression = false,
+  $cleanup_clientbucket = false,
+  $ensure_version = 'installed',
+  $ensure_facter_version = 'installed',
+  $manage_shorewall = false,
+  $puppetmaster = "puppet.${::domain}",
+  $puppetserver_port = 8140,
+  $puppetserver_signport = 8141
+){
   case $::kernel {
     linux: {
       case $::operatingsystem {
@@ -38,7 +42,11 @@ class puppet(
     default: { include puppet::base }
   }
 
-  if hiera('use_shorewall',false) {
-    include shorewall::rules::out::puppet
+  if $manage_shorewall {
+    class{'shorewall::rules::out::puppet':
+      puppetserver          => $puppetserver,
+      puppetserver_port     => $puppetserver_port,
+      puppetserver_signport => $puppetserver_signport,
+    }
   }
 }

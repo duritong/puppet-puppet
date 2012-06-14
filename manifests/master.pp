@@ -1,19 +1,20 @@
 # manifests/puppetmaster.pp
 class puppet::master(
-  $config = hiera('puppet_config','/etc/puppet/puppet.conf'),
-  $fileserver = hiera('puppet_fileserver_config','/etc/puppet/fileserver.conf'),
-  $http_compression = hiera('puppet_http_compression',false),
-  $cleanup_clientbucket = hiera('puppet_cleanup_clientbucket',false),
-  $cron_time = hiera('puppet_cron_time',false),
-  $ensure_version = hiera('puppet_ensure_version', 'installed'),
-  $ensure_facter_version = hiera('puppet_ensure_facter_version', 'installed'),
-  $lastruncheck_cron = hiera('puppet_master_lastruncheck_cron','40 10 * * *'),
-  $lastruncheck_ignorehosts = hiera('puppet_master_lastruncheck_ignorehosts',''),
-  $lastruncheck_timeout = hiera('puppet_master_lastruncheck_timeout',''),
-  $lastruncheck_additionaloptions = hiera('puppet_master_lastruncheck_additionaloptions',''),
-  $mode = hiera('puppet_master_mode','webrick'),
-  $cleanup_reports = hiera('puppet_master_cleanup_reports','30'),
-  $reports_dir = hiera('puppet_master_reports_dir','/var/lib/puppet/reports'),
+  $config = '/etc/puppet/puppet.conf',
+  $fileserver = '/etc/puppet/fileserver.conf',
+  $http_compression = false,
+  $cleanup_clientbucket = false,
+  $cron_time = false,
+  $ensure_version = 'installed',
+  $ensure_facter_version = 'installed',
+  $lastruncheck_cron = '40 10 * * *',
+  $lastruncheck_ignorehosts = '',
+  $lastruncheck_timeout = '',
+  $lastruncheck_additionaloptions = '',
+  $mode = 'webrick',
+  $cleanup_reports = '30',
+  $reports_dir = '/var/lib/puppet/reports',
+  $manage_shorewall = false
 ) {
   if $cron_time {
     class{'puppet::cron':
@@ -23,6 +24,7 @@ class puppet::master(
       cron_time => $cron_time,
       ensure_version => $ensure_version,
       ensure_facter_version => $ensure_facter_version,
+      manage_shorewall => $manage_shorewall,
     }
   } else {
     class{'puppet':
@@ -31,6 +33,7 @@ class puppet::master(
       cleanup_clientbucket => $cleanup_clientbucket,
       ensure_version => $ensure_version,
       ensure_facter_version => $ensure_facter_version,
+      manage_shorewall => $manage_shorewall,
     }
   }
   case $::operatingsystem {
@@ -64,11 +67,15 @@ class puppet::master(
     include puppet::master::cleanup_reports::disable
   }
 
-  if hiera('use_shorewall',false) {
-    include shorewall::rules::puppet::master
+  if $manage_shorewall {
+    class{'shorewall::rules::puppet::master':
+      puppetserver          => $puppetserver,
+      puppetserver_port     => $puppetserver_port,
+      puppetserver_signport => $puppetserver_signport,
+    }
   }
 
-  if hiera('use_munin',false) {
+  if $manage_munin {
     include puppet::master::munin
   }
 }
