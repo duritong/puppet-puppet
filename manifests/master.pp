@@ -14,7 +14,10 @@ class puppet::master(
   $mode = 'webrick',
   $cleanup_reports = '30',
   $reports_dir = '/var/lib/puppet/reports',
-  $manage_shorewall = false
+  $manage_shorewall = false,
+  $shorewall_puppetmaster = "domain.${::domain}",
+  $shorewall_puppetmaster_port = 8140,
+  $shorewall_puppetmaster_signport = 8141
 ) {
   if $cron_time {
     class{'puppet::cron':
@@ -25,6 +28,9 @@ class puppet::master(
       ensure_version => $ensure_version,
       ensure_facter_version => $ensure_facter_version,
       manage_shorewall => $manage_shorewall,
+      shorewall_puppetmaster => $shorewall_puppetmaster,
+      shorewall_puppetmaster_port => $shorewall_puppetmaster_port,
+      shorewall_puppetmaster_signport => $shorewall_puppetmaster_signport,
     }
   } else {
     class{'puppet':
