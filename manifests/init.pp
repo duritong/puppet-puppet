@@ -25,9 +25,9 @@ class puppet(
   $ensure_version = 'installed',
   $ensure_facter_version = 'installed',
   $manage_shorewall = false,
-  $puppetmaster = "puppet.${::domain}",
-  $puppetserver_port = 8140,
-  $puppetserver_signport = 8141
+  $shorewall_puppetmaster = "puppet.${::domain}",
+  $shorewall_puppetmaster_port = 8140,
+  $shorewall_puppetmaster_signport = 8141
 ){
   case $::kernel {
     linux: {
@@ -44,9 +44,9 @@ class puppet(
 
   if $manage_shorewall {
     class{'shorewall::rules::out::puppet':
-      puppetserver          => $puppetserver,
-      puppetserver_port     => $puppetserver_port,
-      puppetserver_signport => $puppetserver_signport,
+      puppetserver          => $shorewall_puppetmaster,
+      puppetserver_port     => $shorewall_puppetmaster_port,
+      puppetserver_signport => $shorewall_puppetmaster_signport,
     }
   }
 }
