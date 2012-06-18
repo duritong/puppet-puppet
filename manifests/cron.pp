@@ -6,8 +6,7 @@ class puppet::cron(
   $cleanup_clientbucket = false,
   $ensure_version = 'installed',
   $ensure_facter_version = 'installed',
-  $manage_shorewall = false,
-  $shorewall_puppetmaster = "puppet.${domain}",
+  $shorewall_puppetmaster = false,
   $shorewall_puppetmaster_port = '8140',
   $shorewall_puppetmaster_signport = '8141'
 ) {
@@ -17,7 +16,6 @@ class puppet::cron(
     cleanup_clientbucket            => $cleanup_clientbucket,
     ensure_version                  => $ensure_version,
     ensure_facter_version           => $ensure_facter_version,
-    manage_shorewall                => $manage_shorewall,
     shorewall_puppetmaster          => $shorewall_puppetmaster,
     shorewall_puppetmaster_port     => $shorewall_puppetmaster_port,
     shorewall_puppetmaster_signport => $shorewall_puppetmaster_signport,

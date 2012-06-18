@@ -14,10 +14,10 @@ class puppet::master(
   $mode = 'webrick',
   $cleanup_reports = '30',
   $reports_dir = '/var/lib/puppet/reports',
-  $manage_shorewall = false,
   $shorewall_puppetmaster = "domain.${::domain}",
   $shorewall_puppetmaster_port = 8140,
-  $shorewall_puppetmaster_signport = 8141
+  $shorewall_puppetmaster_signport = 8141,
+  $manage_munin = false
 ) {
   if $cron_time {
     class{'puppet::cron':
@@ -27,7 +27,6 @@ class puppet::master(
       cron_time => $cron_time,
       ensure_version => $ensure_version,
       ensure_facter_version => $ensure_facter_version,
-      manage_shorewall => $manage_shorewall,
       shorewall_puppetmaster => $shorewall_puppetmaster,
       shorewall_puppetmaster_port => $shorewall_puppetmaster_port,
       shorewall_puppetmaster_signport => $shorewall_puppetmaster_signport,
@@ -39,7 +38,6 @@ class puppet::master(
       cleanup_clientbucket => $cleanup_clientbucket,
       ensure_version => $ensure_version,
       ensure_facter_version => $ensure_facter_version,
-      manage_shorewall => $manage_shorewall,
     }
   }
   case $::operatingsystem {
@@ -73,11 +71,11 @@ class puppet::master(
     include puppet::master::cleanup_reports::disable
   }
 
-  if $manage_shorewall {
+  if $shorewall_puppetmaster {
     class{'shorewall::rules::puppet::master':
-      puppetserver          => $puppetserver,
-      puppetserver_port     => $puppetserver_port,
-      puppetserver_signport => $puppetserver_signport,
+      puppetserver          => $shorewall_puppetmaster,
+      puppetserver_port     => $shorewall_puppetmaster_port,
+      puppetserver_signport => $shorewall_puppetmaster_signport,
     }
   }
 

@@ -24,8 +24,7 @@ class puppet(
   $cleanup_clientbucket = false,
   $ensure_version = 'installed',
   $ensure_facter_version = 'installed',
-  $manage_shorewall = false,
-  $shorewall_puppetmaster = "puppet.${::domain}",
+  $shorewall_puppetmaster = false,
   $shorewall_puppetmaster_port = 8140,
   $shorewall_puppetmaster_signport = 8141
 ){
@@ -42,7 +41,7 @@ class puppet(
     default: { include puppet::base }
   }
 
-  if $manage_shorewall {
+  if $shorewall_puppetmaster {
     class{'shorewall::rules::out::puppet':
       puppetserver          => $shorewall_puppetmaster,
       puppetserver_port     => $shorewall_puppetmaster_port,
