@@ -72,11 +72,7 @@ class puppet::master(
   }
 
   if $shorewall_puppetmaster {
-    class{'shorewall::rules::puppet::master':
-      puppetserver          => $shorewall_puppetmaster,
-      puppetserver_port     => $shorewall_puppetmaster_port,
-      puppetserver_signport => $shorewall_puppetmaster_signport,
-    }
+    include shorewall::rules::puppet::master
   }
 
   if $manage_munin {
