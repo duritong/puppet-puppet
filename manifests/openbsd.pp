@@ -8,9 +8,9 @@ class puppet::openbsd inherits puppet::base {
     restart => '/bin/kill -HUP `/bin/cat /var/run/puppet/agent.pid`',
     stop => '/bin/kill `/bin/cat /var/run/puppet/agent.pid`',
     start => '/usr/local/bin/puppet agent',
-    hasstatus => false,
+    status => '/bin/test -f /var/run/puppet/agent.pid && /bin/ps aux -p `/bin/cat /var/run/puppet/agent.pid` > /dev/null',
+    hasstatus => true,
     hasrestart => false,
-    pattern => 'puppet agent',
   }
   
   openbsd::rc_local { 'puppetd':
