@@ -49,7 +49,7 @@ def phaselog(logfile)
         end
     end
   end
-  puts "avg_compile.value #{(avg / count).to_s[0..3]}" unless count == 0
+  puts "avg_compile.value #{count == 0 ? 0 : (avg / count).to_s[0..3]}"
   puts "last5m_count.value #{count}"
   puts "last24h_unique_count.value #{day_count_unique}"
 end
