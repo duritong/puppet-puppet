@@ -4,7 +4,7 @@ class puppet::master::munin {
     [ 'puppetmaster_memory', 'puppet_clients' ]:
       source => "puppet/munin/puppet_",
       config => "user root
-env.logfile /var/log/puppet/puppetmaster.log"
+env.puppet_logfile /var/log/puppet/puppetmaster.log"
   }
 
 }
