@@ -10,14 +10,14 @@ class puppet::master::dashboard(
     'dashboard':
       password => $mysql_password;
   } -> file{
-    '/usr/share/puppet-dashboard/config/database.yaml':
-      content => template('puppet/master/dashboard/database.yaml.erb'),
-      owner   => 'puppet-dashboard',
+    '/usr/share/puppet-dashboard/config/database.yml':
+      content => template('puppet/master/dashboard/database.yml.erb'),
+      owner   => root,
       group   => 'puppet-dashboard',
       mode    => '0640';
-    '/usr/share/puppet-dashboard/config/settings.yaml':
-      content => template('puppet/master/dashboard/settings.yaml.erb'),
-      owner   => 'puppet-dashboard',
+    '/usr/share/puppet-dashboard/config/settings.yml':
+      content => template('puppet/master/dashboard/settings.yml.erb'),
+      owner   => root,
       group   => 'puppet-dashboard',
       mode    => '0640';
   } ~> exec{
@@ -36,7 +36,7 @@ class puppet::master::dashboard(
     Service['puppet-dashboard']{
       ensure  => running,
       enable  => true,
-      subscribe => File['/usr/share/puppet-dashboard/config/database.yaml','/usr/share/puppet-dashboard/config/settings.yaml'],
+      subscribe => File['/usr/share/puppet-dashboard/config/database.yml','/usr/share/puppet-dashboard/config/settings.yml'],
     }
   } else {
     Service['puppet-dashboard']{
