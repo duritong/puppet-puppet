@@ -8,7 +8,7 @@ class puppet::master::dashboard(
     ensure => installed,
   } -> mysql::default_database{
     'dashboard':
-      password  => $mysql_password,
+      password  => mysql_password($mysql_password),
       host      => '127.0.0.1';
   } -> file{
     '/usr/share/puppet-dashboard/config/database.yml':
