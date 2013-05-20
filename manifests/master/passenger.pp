@@ -1,6 +1,6 @@
 # class to use passenger for serving puppetmaster
 
-class puppet::master::passenger inherits puppet::master::base {
+class puppet::master::passenger inherits puppet::master {
 
   include ::passenger
 
