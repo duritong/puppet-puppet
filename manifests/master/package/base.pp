@@ -4,7 +4,9 @@ class puppet::master::package::base inherits puppet::master::package {
     ensure => $puppet::ensure_version,
   }
 
-  Service['puppetmaster']{
-    require +> Package['puppetmaster'],
+  if $puppet::master::mode != 'passenger' {
+    Service['puppetmaster']{
+      require +> Package['puppetmaster'],
+    }
   }
 }
