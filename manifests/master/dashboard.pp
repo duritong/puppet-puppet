@@ -32,6 +32,18 @@ class puppet::master::dashboard(
       enable  => true;
   }
 
+  file{'/etc/cron.daily/puppet-dashboard_cleanup':
+    content => "#/bin/bash
+cd /usr/share/puppet-dashboard
+RAILS_ENV=production /usr/bin/rake reports:prune upto=1 unit=mon >> /usr/share/puppet-dashboard/log/cron.log
+RAILS_ENV=production /usr/bin/rake reports:prune:orphaned >> /usr/share/puppet-dashboard/log/cron.log
+RAILS_ENV=production /usr/bin/rake db:raw:optimize >> /usr/share/puppet-dashboard/log/cron.log\n",
+      owner   => 'puppet-dashboard',
+      group   => 'puppet-dashboard',
+      mode    => '0755',
+      require => Service['puppet-dashboard-workers'];
+  }
+
   service{'puppet-dashboard': }
   if $service {
     Service['puppet-dashboard']{
