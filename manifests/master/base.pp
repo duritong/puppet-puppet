@@ -1,16 +1,19 @@
+# overwrite a few things for the master
 class puppet::master::base inherits puppet::base {
 
   file { $puppet::master::fileserver:
     source => [ "puppet:///modules/site_puppet/master/${::fqdn}/fileserver.conf",
-                "puppet:///modules/site_puppet/master/fileserver.conf",
-                "puppet:///modules/puppet/master/fileserver.conf" ],
+                'puppet:///modules/site_puppet/master/fileserver.conf',
+                'puppet:///modules/puppet/master/fileserver.conf' ],
     owner => root, group => puppet, mode => 640;
   }
 
-  File['puppet_config']{
-    source => [ "puppet:///modules/site_puppet/master/${::fqdn}/puppet.conf",
-                "puppet:///modules/site_puppet/master/puppet.conf",
-                "puppet:///modules/puppet/master/puppet.conf" ]
+  if !$puppet::master::config_content {
+    File['puppet_config']{
+      source => [ "puppet:///modules/site_puppet/master/${::fqdn}/puppet.conf",
+                  'puppet:///modules/site_puppet/master/puppet.conf',
+                  'puppet:///modules/puppet/master/puppet.conf' ]
+    }
   }
 
   if $puppet::master::storeconfigs {
