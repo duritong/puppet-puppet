@@ -17,16 +17,17 @@
 # General Public License version 3 as published by
 # the Free Software Foundation.
 #
-
+# Manage the puppet client
 class puppet(
-  $config = '/etc/puppet/puppet.conf',
-  $http_compression = false,
-  $cleanup_clientbucket = false,
-  $ensure_version = 'installed',
-  $ensure_facter_version = 'installed',
-  $shorewall_puppetmaster = false,
-  $shorewall_puppetmaster_port = 8140,
-  $shorewall_puppetmaster_signport = 8141
+  $config                           = '/etc/puppet/puppet.conf',
+  $config_content                   = false,
+  $http_compression                 = false,
+  $cleanup_clientbucket             = false,
+  $ensure_version                   = 'installed',
+  $ensure_facter_version            = 'installed',
+  $shorewall_puppetmaster           = false,
+  $shorewall_puppetmaster_port      = 8140,
+  $shorewall_puppetmaster_signport  = 8141
 ){
   case $::kernel {
     linux: {
