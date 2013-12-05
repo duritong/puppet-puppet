@@ -1,8 +1,8 @@
 production:
   adapter: mysql
   database: 'dashboard'
-  host:     '127.0.0.1'
+  host:     '<%= @mysql_host %>'
   username: 'dashboard'
-  password: '<%= mysql_password %>'
+  password: '<%= @mysql_password %>'
   encoding: utf8
 
