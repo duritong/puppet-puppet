@@ -2,10 +2,12 @@
 class puppet::master::base inherits puppet::base {
 
   file { $puppet::master::fileserver:
-    source => [ "puppet:///modules/site_puppet/master/${::fqdn}/fileserver.conf",
+    source  => ["puppet:///modules/site_puppet/master/${::fqdn}/fileserver.conf",
                 'puppet:///modules/site_puppet/master/fileserver.conf',
                 'puppet:///modules/puppet/master/fileserver.conf' ],
-    owner => root, group => puppet, mode => 640;
+    owner   => root,
+    group   => puppet,
+    mode    => '0640';
   }
 
   if !$puppet::master::config_content {
