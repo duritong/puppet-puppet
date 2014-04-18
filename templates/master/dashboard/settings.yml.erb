@@ -51,7 +51,7 @@ file_bucket_server: 'puppet'
 file_bucket_port: 8140
 
 # Amount of time in seconds since last report before a node is considered no longer reporting
-no_longer_reporting_cutoff: <%= settings['no_longer_reporting_cutoff'] || 3600 %>
+no_longer_reporting_cutoff: <%= @settings['no_longer_reporting_cutoff'] || 3600 %>
 
 # How many days of history to display on the "Daily Run Status" graph
 daily_run_history_length: 30
@@ -78,7 +78,7 @@ custom_logo_alt_text: 'Puppet Dashboard'
 disable_legacy_report_upload_url: false
 
 # Disables the UI and controller actions for editing nodes, classes, groups and reports.  Report submission is still allowed
-enable_read_only_mode: <%= settings['enable_read_only_mode'] || 'false' %>
+enable_read_only_mode: <%= @settings['enable_read_only_mode'] || 'false' %>
 
 # Default number of items of each kind to display per page
 nodes_per_page: 20
