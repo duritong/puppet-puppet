@@ -9,19 +9,6 @@ class puppet::debian inherits puppet::linux {
     owner => root, group => 0, mode => 0644;
   }
 
-  case $::lsbdistcodename {
-    squeeze,sid: {
-      $puppet_hasstatus = true
-    }
-    default: {
-      $puppet_hasstatus = false
-    }
-  }
-
-  Service[puppet]{
-    hasstatus => $puppet_hasstatus,
-  }
-
   package{ 'puppet-common':
     ensure => $puppet::ensure_version,
   }
