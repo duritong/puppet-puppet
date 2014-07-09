@@ -2,8 +2,7 @@
 class puppet::cron::base inherits puppet::base {
 
   case $::operatingsystem {
-    debian: { if $::lsbdistcodename != 'lenny' { $stop_service = true } else { $stop_service = false }  }
-    openbsd, ubuntu: { $stop_service = false }
+    openbsd: { $stop_service = false }
     default: { $stop_service = true }
   }
 
