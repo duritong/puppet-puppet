@@ -46,11 +46,11 @@ class puppet::master::dashboard(
   file{'/etc/cron.daily/puppet-dashboard_cleanup':
     content   => "#/bin/bash
 cd /usr/share/puppet-dashboard
-RAILS_ENV=production /usr/bin/rake reports:prune upto=1 unit=mon >> /usr/share/puppet-dashboard/log/cron.log
-RAILS_ENV=production /usr/bin/rake reports:prune:orphaned >> /usr/share/puppet-dashboard/log/cron.log
-RAILS_ENV=production /usr/bin/rake db:raw:optimize >> /usr/share/puppet-dashboard/log/cron.log\n",
-      owner   => 'puppet-dashboard',
-      group   => 'puppet-dashboard',
+su - puppet-dashboard -s /bin/bash -c 'RAILS_ENV=production /usr/bin/rake reports:prune upto=1 unit=mon >> /usr/share/puppet-dashboard/log/cron.log'
+su - puppet-dashboard -s /bin/bash -c 'RAILS_ENV=production /usr/bin/rake reports:prune:orphaned >> /usr/share/puppet-dashboard/log/cron.log'
+su - puppet-dashboard -s /bin/bash -c 'RAILS_ENV=production /usr/bin/rake db:raw:optimize >> /usr/share/puppet-dashboard/log/cron.log'\n",
+      owner   => 'root',
+      group   => 0,
       mode    => '0755',
       require => Service['puppet-dashboard-workers'];
   }
@@ -60,7 +60,8 @@ RAILS_ENV=production /usr/bin/rake db:raw:optimize >> /usr/share/puppet-dashboar
     Service['puppet-dashboard']{
       ensure    => running,
       enable    => true,
-      subscribe => File['/usr/share/puppet-dashboard/config/database.yml','/usr/share/puppet-dashboard/config/settings.yml'],
+      subscribe => File['/usr/share/puppet-dashboard/config/database.yml',
+        '/usr/share/puppet-dashboard/config/settings.yml'],
     }
   } else {
     Service['puppet-dashboard']{
