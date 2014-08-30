@@ -24,7 +24,6 @@ class puppet::cron(
     shorewall_puppetmaster_signport => $shorewall_puppetmaster_signport,
   }
   case $::operatingsystem {
-    debian: { include puppet::cron::debian }
     openbsd: { include puppet::cron::openbsd }
     default: {
       case $::kernel {
