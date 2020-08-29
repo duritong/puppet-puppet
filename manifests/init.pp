@@ -28,9 +28,9 @@ class puppet(
   $firewall_puppetserver      = false,
   $firewall_puppetserver_port = 8140,
 ){
-  case $::kernel {
+  case $facts['kernel'] {
     linux: {
-      case $::operatingsystem {
+      case $facts['operatingsystem'] {
         gentoo: { include puppet::gentoo }
         centos: { include puppet::centos }
         debian,ubuntu: { include puppet::debian }
@@ -41,10 +41,10 @@ class puppet(
     default: { include puppet::base }
   }
 
-  if $shorewall_puppetserver {
+  if $firewall_puppetserver {
     class{'firewall::rules::out::puppet':
-      puppetserver      => $firewall_puppeserver,
-      puppetserver_port => $firewall_puppeserver_port,
+      puppetserver      => $firewall_puppetserver,
+      puppetserver_port => $firewall_puppetserver_port,
     }
   }
 }
