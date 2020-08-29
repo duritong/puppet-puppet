@@ -19,15 +19,14 @@
 #
 # Manage the puppet client
 class puppet(
-  $config                           = '/etc/puppet/puppet.conf',
-  $config_content                   = false,
-  $http_compression                 = false,
-  $cleanup_clientbucket             = false,
-  $ensure_version                   = 'installed',
-  $ensure_facter_version            = 'installed',
-  $shorewall_puppetmaster           = false,
-  $shorewall_puppetmaster_port      = 8140,
-  $shorewall_puppetmaster_signport  = 8141
+  $config                     = '/etc/puppet/puppet.conf',
+  $config_content             = false,
+  $http_compression           = false,
+  $cleanup_clientbucket       = false,
+  $ensure_version             = 'installed',
+  $ensure_facter_version      = 'installed',
+  $firewall_puppetmaster      = false,
+  $firewall_puppetmaster_port = 8140,
 ){
   case $::kernel {
     linux: {
@@ -43,10 +42,9 @@ class puppet(
   }
 
   if $shorewall_puppetmaster {
-    class{'shorewall::rules::out::puppet':
-      puppetserver          => $shorewall_puppetmaster,
-      puppetserver_port     => $shorewall_puppetmaster_port,
-      puppetserver_signport => $shorewall_puppetmaster_signport,
+    class{'firewall::rules::out::puppet':
+      puppetserver      => $firewall_puppetmaster,
+      puppetserver_port => $firewall_puppetmaster_port,
     }
   }
 }
