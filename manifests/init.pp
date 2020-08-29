@@ -25,8 +25,8 @@ class puppet(
   $cleanup_clientbucket       = false,
   $ensure_version             = 'installed',
   $ensure_facter_version      = 'installed',
-  $firewall_puppetmaster      = false,
-  $firewall_puppetmaster_port = 8140,
+  $firewall_puppetserver      = false,
+  $firewall_puppetserver_port = 8140,
 ){
   case $::kernel {
     linux: {
@@ -41,10 +41,10 @@ class puppet(
     default: { include puppet::base }
   }
 
-  if $shorewall_puppetmaster {
+  if $shorewall_puppetserver {
     class{'firewall::rules::out::puppet':
-      puppetserver      => $firewall_puppetmaster,
-      puppetserver_port => $firewall_puppetmaster_port,
+      puppetserver      => $firewall_puppeserver,
+      puppetserver_port => $firewall_puppeserver_port,
     }
   }
 }
